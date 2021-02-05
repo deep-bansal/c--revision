@@ -1,55 +1,58 @@
 #include<bits/stdc++.h>
 using namespace std;
+string searchIn [] = {
+    "prateek", "sneha", "deepak", "arnav", "shikha", "palak",
+    "utkarsh", "divyam", "vidhi", "sparsh", "akku"
+};
 
-int rotatedBinarySearch(int arr[], int s,int e,int key){
-    if(s>e){
-        return -1;
+string keypad[] = { " ", ".+@$","abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+
+void checkMatched(string str,int i){
+    if(i == 11){
+        return;
     }
 
-    int mid = (s+e)/2;
+    string b = searchIn[i];
+    int k=0;
 
-    if(arr[mid] == key){
-        return mid;
+    for (int j = 0; j < b.length(); ++j)
+    {
+        if(b[j] == str[k]){
+            k++;
+        }        
     }
-    else if(arr[mid] <= arr[e]){
-        if(arr[mid] < key && key <= arr[e]){
-           return rotatedBinarySearch(arr,mid+1,e,key);
-        }
-        else{
-             return rotatedBinarySearch(arr,s,mid-1,key);
-
-        }
-    }
-    else{
-        if(arr[s]<= key && key < arr[mid]){
-            return rotatedBinarySearch(arr,s,mid-1,key);
-        }else{
-             return rotatedBinarySearch(arr,mid+1,e,key);
-        }
+    if(k == str.length()){
+        cout<<b<<endl;
+        return;
     }
 
+    checkMatched(str,i+1);
 }
 
-int countBinary(int n,string input){
-    if(n == 0){
-        return 1;
+void comb(string input,string output){
+    if(input.length() == 0){
+        checkMatched(output,0);
+        return;
     }
-    int count  = 0;
-    int length = input.length();
-    if(input[length - 1] == '0'){
-        count  = countBinary(n-1,input + "1") + countBinary(n-1,input + "0");
+
+    int num = input[0] - '0';
+    string ros = input.substr(1);
+    string s = keypad[num];
+
+    for (int i = 0; i < s.length(); ++i)
+    {
+        char ch = s[i];
+        comb(ros,output + ch);
     }
-    else{
-        count  =  countBinary (n-1, input + "0"); 
-    }
-    return count;
 }
 
 int main(int argc, char const *argv[])
 {
-    int n;
-    cin>>n;
-    int ans = countBinary(n-1,"0") + countBinary(n-1,"1");
-    cout<<ans<<endl;
+    string str;
+    cin >> str;
+    comb(str,"");
+
+
+
     return 0;
 }
