@@ -1,46 +1,44 @@
-#include <bits/stdc++.h>
-
+#include<bits/stdc++.h>
 using namespace std;
-void allidx (int*arr ,int m,int n,int i,int* store,int j)
+int main(int argc, char const *argv[])
 {
-    if(i==n)
-    {
-        return;
-    }
-    if(i<n && arr[i]==m)
-    {
-        store[j]=i;
-        allidx(arr,m,n,i+1,store,j+1);
-    }
-    else
-    {
-        allidx(arr,m,n,i+1,store,j);
-    }
-}
+  int n;
+  cin>>n;
+  string str[n];
+  int q;
+  cin>>q;
+  cin.ignore();
+  for (int i = 0; i < n; ++i)
+  {
+    getline(cin,str[i]);    
+  }
 
-int main()
-{
-    int n;
-    cin>>n;
-    int arr[n];
-    for(int i=0;i<n;i++)
+  for (int i = 0; i < q; ++i)
+  {
+    string query;
+    getline(cin,query);
+    int x = 0;
+    for (int i = 0; i < query.length(); ++i)
     {
-        cin>>arr[i];
-    }
-    int m;
-    cin>>m;
-    int store[n];
-    memset(store,-1,sizeof(arr));
-    // for (int i = 0; i < n; ++i)
-    // {
-    //   cout<<store[i]<<endl;
-    // }
-    allidx(arr,m,n,0,store,0);
 
-    for(int k=0;store[k]!=-1;k++)
-    {
-        cout<<store[k]<<" ";
+      if(query[i] == '.'){
+        x+=1;
+      }
+      else if(query[i] == '~'){
+        i=i+1;
+        string ros = query.substr(i);
+        size_t found = str[x].find(ros);
+        if(found != string::npos){
+          
+          string y = str[x].substr(found+ ros.length()+4);
+          int length = y.length();
+          
+          cout<<y.substr(0,length-2)<<endl;
+        }else{
+          cout<<"Not Found!"<<endl;
+        }
+      }
     }
-
-    return 0;
+  }
+  return 0;
 }

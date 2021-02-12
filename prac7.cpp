@@ -1,45 +1,35 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
+#include <iomanip>
+#include <limits>
+
 using namespace std;
-static int MOD= 10000003;
-#define ll long long
 
-bool isPossible(ll int n,int k,ll int mid){
-    if(pow(mid,k) <= n){
-        return true;
-    }
-    return false;
-}
+int main() {
+    int i = 4;
+    double d = 4.0;
+    string s = "HackerRank ";
 
-ll int kthRoot(ll int n,int k){
-    if(k == 1){
-        return n;
-    }
-    int start = 0, end = pow(n,0.5);
-    ll int ans = 0;
-    while(start <= end){
-        ll int mid = start + (end-start)/2;
-        if(isPossible(n,k,mid)){
-            ans =mid;
-            start = mid +1;
-        }
-        else{
-            end = mid -1;
-        }
+    
+    // Declare second integer, double, and String variables.
+    int i2;
+    double d2;
+    string s2;
+    
+    // Read and save an integer, double, and String to your variables.
+    cin>>i2;
+    cin>>d2;
+    cin.ignore();
+    getline(cin, s2); 
+    // Note: If you have trouble reading the entire string, please go back and review the Tutorial closely.
+    
+    // Print the sum of both integer variables on a new line.
+    cout<<i+i2<<endl;
+    
+    // Print the sum of the double variables on a new line.
+    cout << fixed << setprecision(1) << d+d2 << endl;
+    // Concatenate and print the String variables on a new line
+    cout<<(s + s2);
+    // The 's' variable above should be printed first.
 
-    }
-    return ans;
-}
-
-int main(int argc, char const *argv[])
-{
-    int t;
-    cin>>t;
-    while(t--){
-        ll int n;
-        int k;
-        cin>>n>>k;
-
-        cout<<kthRoot(n,k)<<endl;
-    }
     return 0;
 }

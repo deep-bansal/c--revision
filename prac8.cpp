@@ -1,23 +1,33 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
+
 using namespace std;
 
-int main(int argc, char const *argv[])
-{
-	int n,p;
-	cin>>n>>p;
-	float ans = 0;
-	float inc = 1;
-	int times = 0;
-	while(times <= p){
-	while((ans*ans) <= n){
-		ans = ans +inc;
-	}
+// Complete the solve function below.
+void solve(double meal_cost, int tip_percent, int tax_percent) {
+    double tip = (double(tip_percent)/100);
+    cout<<tip<<endl;
+    double tax = (tax_percent/100) * meal_cost;
+    cout<<tax<<endl;
+    cout<<round(meal_cost + tip + tax)<<endl;
 
-	ans  = ans -inc;
-	inc = inc/10;
-	times = times +1;
+
 }
-cout<<ans<<endl;
 
-	return 0;
+int main()
+{
+    double meal_cost;
+    cin >> meal_cost;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    int tip_percent;
+    cin >> tip_percent;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    int tax_percent;
+    cin >> tax_percent;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    solve(meal_cost, tip_percent, tax_percent);
+
+    return 0;
 }

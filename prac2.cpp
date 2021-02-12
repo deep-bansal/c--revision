@@ -1,58 +1,72 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
+
 using namespace std;
-string searchIn [] = {
-    "prateek", "sneha", "deepak", "arnav", "shikha", "palak",
-    "utkarsh", "divyam", "vidhi", "sparsh", "akku"
-};
 
-string keypad[] = { " ", ".+@$","abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
-
-void checkMatched(string str,int i){
-    if(i == 11){
-        return;
+// Complete the matchingStrings function below.
+vector<int> matchingStrings(vector<string> strings, vector<string> queries) {
+    vector<int> v;
+    for(int i=0;i< queries.size();i++){
+        string s = queries[i];
+        int count = 0;
+        for(int j=0;j<strings.size();j++)
+        {
+            string s2 = strings[j];
+            
+             
+            if(s.compare(s2)==0){
+                count++;
+            }
+        }
+        v.push_back(count);
     }
+    return v;
 
-    string b = searchIn[i];
-    int k=0;
 
-    for (int j = 0; j < b.length(); ++j)
-    {
-        if(b[j] == str[k]){
-            k++;
-        }        
-    }
-    if(k == str.length()){
-        cout<<b<<endl;
-        return;
-    }
-
-    checkMatched(str,i+1);
 }
 
-void comb(string input,string output){
-    if(input.length() == 0){
-        checkMatched(output,0);
-        return;
-    }
-
-    int num = input[0] - '0';
-    string ros = input.substr(1);
-    string s = keypad[num];
-
-    for (int i = 0; i < s.length(); ++i)
-    {
-        char ch = s[i];
-        comb(ros,output + ch);
-    }
-}
-
-int main(int argc, char const *argv[])
+int main()
 {
-    string str;
-    cin >> str;
-    comb(str,"");
+    ofstream fout(getenv("OUTPUT_PATH"));
 
+    int strings_count;
+    cin >> strings_count;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
+    vector<string> strings(strings_count);
+
+    for (int i = 0; i < strings_count; i++) {
+        string strings_item;
+        getline(cin, strings_item);
+
+        strings[i] = strings_item;
+    }
+
+    int queries_count;
+    cin >> queries_count;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    vector<string> queries(queries_count);
+
+    for (int i = 0; i < queries_count; i++) {
+        string queries_item;
+        getline(cin, queries_item);
+
+        queries[i] = queries_item;
+    }
+
+    vector<int> res = matchingStrings(strings, queries);
+
+    for (int i = 0; i < res.size(); i++) {
+        fout << res[i];
+
+        if (i != res.size() - 1) {
+            fout << "\n";
+        }
+    }
+
+    fout << "\n";
+
+    fout.close();
 
     return 0;
 }
