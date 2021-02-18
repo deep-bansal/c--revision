@@ -1,44 +1,70 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
+
+class Car {
+  int* price;
+public:
+  string name;
+  int wheels;
+
+  Car(string n, int p, int w) {
+    cout << "This is my Constructor2" << endl;
+    name = n;
+    price = &p;
+    wheels = w;
+
+  }
+
+  // void operator = (Car &X) {
+  //   name = X.name;
+  //   price = X.price;
+  //   wheels = X.wheels;
+  // }
+
+  void print() {
+    cout << name << endl;
+    cout << price << endl;
+    cout << wheels << endl;
+    cout << "--------------------" << endl;
+  }
+
+  void setPrice(int p){
+    price = &p;
+  }
+
+  int getPrice() const {
+    return *price;
+
+  }
+ 
+
+};
+
+ostream& operator << (ostream &o, Car &X){
+   o << X.name << endl;
+    o << X.getPrice() << endl;
+    o << X.wheels << endl;
+    o << "--------------------" << endl;
+
+    return o;
+
+}
+
 int main(int argc, char const *argv[])
 {
-  int n;
-  cin>>n;
-  string str[n];
-  int q;
-  cin>>q;
-  cin.ignore();
-  for (int i = 0; i < n; ++i)
-  {
-    getline(cin,str[i]);    
-  }
+  int x = 2000;
+  Car C("BMW",x,4);
 
-  for (int i = 0; i < q; ++i)
-  {
-    string query;
-    getline(cin,query);
-    int x = 0;
-    for (int i = 0; i < query.length(); ++i)
-    {
+  Car D("AUDI",x,8);
+  int z = 1000;
+  D.setPrice(z);
 
-      if(query[i] == '.'){
-        x+=1;
-      }
-      else if(query[i] == '~'){
-        i=i+1;
-        string ros = query.substr(i);
-        size_t found = str[x].find(ros);
-        if(found != string::npos){
-          
-          string y = str[x].substr(found+ ros.length()+4);
-          int length = y.length();
-          
-          cout<<y.substr(0,length-2)<<endl;
-        }else{
-          cout<<"Not Found!"<<endl;
-        }
-      }
-    }
-  }
+  cout<<C<<D;
+
+  cout<<C.getPrice()<<endl;
+  cout<<D.getPrice()<<endl;
+
+
+ 
   return 0;
 }
