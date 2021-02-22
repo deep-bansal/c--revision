@@ -1,35 +1,24 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-int findMax(int n,int* arr){
-    int ans = 0;
-    for (int i = 0; i < n-2; ++i)
-    {
-        int num1 = arr[i],num2 =arr[i+1],num3=arr[i+2];
-
-        int val = abs(num1-num2) + abs(num2-num3) + abs(num3-num1);
-
-        ans = max(ans,val);
-
+ void removeDuplicates(vector<int>& nums) {
+        for(int i=0;i<nums.size()-1;i++){
+            if(nums[i] == nums[i+1]){
+                nums.erase(nums.begin()+i);
+}
+        }
+        for (int i = 0; i < nums.size(); ++i)
+        {
+            cout<<nums[i]<<" ";
+        }
         
     }
-    return ans;
-}
 
-int main(int argc, char const *argv[])
+int main()
 {
-    int t;
-    cin>>t;
-    while(t--){
-        int n;
-        cin>>n;
-        int arr[n];
-        for (int i = 0; i < n; ++i)
-        {
-            cin>>arr[i];
-        }
+    //code
+    vector<int>nums = {0,0,1,1,1,2,2,3,3,4};
+    removeDuplicates(nums);
 
-        cout<<findMax(n,arr)<<endl;
-    }
     return 0;
 }
