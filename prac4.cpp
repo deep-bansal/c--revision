@@ -1,28 +1,108 @@
 #include <bits/stdc++.h>
 using namespace std;
-
-int ans[7];
-
-void stockSpan(int stocks[],int days){
-  stack<int>st;
-  for(int i=0;i<7;i++){
-    while(!st.empty() and  stocks[st.top()]<= stocks[i]){
-      st.pop();
+class Stack
+{
+  vector<int>v;
+  int minimum;
+public:
+  bool isEmpty(){
+    if(v.size() == 0){
+      return true;
     }
-    ans[i] = st.empty()? i-i:i-st.top();
-    st.push(i); 
+    return false;
   }
-}
 
+  void push(int num){
+    if(isEmpty()){
+      minimum =num;
+      v.push_back(num);
+    }
+    else if (num < minimum){
+      v.push_back(2*num -minimum);
+      minimum = num;
+    }
+   else{
+     v.push_back(num);
+   }
+  }
+
+  int top(){
+    if(isEmpty()){
+      cout<<"Stack is empty"<<endl;
+      return 0;
+    }
+
+    int top = v[v.size()-1];
+    if(top<minimum){
+      top = minimum;
+    }
+    return top;
+  }
+
+  void pop(){
+    if(isEmpty()){
+      cout<<"Stack is empty"<<endl;
+      return;
+    }
+
+    int topEle = v[v.size()-1];
+    if(topEle<minimum){
+      minimum = 2*minimum -topEle;
+    }
+    v.pop_back();
+
+  }
+  int getMin(){
+    return minimum;
+  }
+
+  
+};
 int main(int argc, char const *argv[])
 {
-  int stocks[7] = {100,90,70,80,85,60,90};
-  int days = 7;
-  stockSpan(stocks,days);
-  for (int i = 0; i < 7; ++i)
-  {
-    cout<<ans[i]<<" ";;
-  }
-  cout<<endl;
+  Stack st;
+
+  st.push(2);
+
+  st.push(3);
+
+  st.push(4);
+
+  st.push(1);
+
+  st.push(5);
+
+  st.push(-1);
+
+  st.push(4);
+
+  cout << st.top() << " " << st.getMin() << endl;
+
+  st.pop();
+
+  cout << st.top() << " " << st.getMin() << endl;
+
+  st.pop();
+
+  cout << st.top() << " " << st.getMin() << endl;
+
+  st.pop();
+
+  cout << st.top() << " " << st.getMin() << endl;
+
+  st.pop();
+
+  cout << st.top() << " " << st.getMin() << endl;
+
+  st.pop();
+
+  cout << st.top() << " " << st.getMin() << endl;
+
+  st.pop();
+
+  cout << st.top() << " " << st.getMin() << endl;
+
+  st.pop();
+
   return 0;
 }
