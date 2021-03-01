@@ -74,10 +74,7 @@ int main()
 		}
 	}
 
-	// for(int i=0;i<5;i++){
-	// 	cout<<primearray[i]<<" ";
-	// }
-
+	
   int n,q;
   cin>>n>>q;
   stack<int> A0;

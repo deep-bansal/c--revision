@@ -1,33 +1,40 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
-// Complete the solve function below.
-void solve(double meal_cost, int tip_percent, int tax_percent) {
-    double tip = (double(tip_percent)/100);
-    cout<<tip<<endl;
-    double tax = (tax_percent/100) * meal_cost;
-    cout<<tax<<endl;
-    cout<<round(meal_cost + tip + tax)<<endl;
+void stockSpan(int* arr,int n){
+    stack<int>st;
+    st.push(0);
+    cout<<1<<" ";
 
+    for (int i = 1; i < n; ++i)
+    {
+        while(!st.empty() && arr[st.top()]<= arr[i]){
+            st.pop();
 
+        }        
+        if(st.empty()){
+            cout<<i+1<<" ";
+        }else{
+            cout<<(i-st.top())<<" ";
+        }
+
+        st.push(i);
+    }
+
+    cout<<"END";
+
+    
 }
 
-int main()
+int main(int argc, char const *argv[])
 {
-    double meal_cost;
-    cin >> meal_cost;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    int n;
+    cin>>n;
+    int arr[n];
+    for(int i=0;i<n;i++){
+        cin>>arr[i];
+    }
 
-    int tip_percent;
-    cin >> tip_percent;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-    int tax_percent;
-    cin >> tax_percent;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-    solve(meal_cost, tip_percent, tax_percent);
-
+    stockSpan(arr,n);
     return 0;
 }
