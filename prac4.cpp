@@ -1,108 +1,39 @@
 #include <bits/stdc++.h>
 using namespace std;
-class Stack
-{
-  vector<int>v;
-  int minimum;
-public:
-  bool isEmpty(){
-    if(v.size() == 0){
-      return true;
+vector<long long> nextLargerElement(vector<long long> arr, int n){
+    // Your code here
+    stack<long long>st;
+    
+    vector<long long>ans(n);
+    st.push(arr[n-1]);
+    ans[n-1] = -1;
+    for(int i =n-2;i>=0;i--){
+        
+        while(!st.empty() && st.top()<= arr[i]){
+            st.pop();
+        }
+        if(st.empty()){
+            ans[i] = -1;
+        }
+        else{
+            ans[i] = st.top();
+        }
+        st.push(arr[i]);
     }
-    return false;
-  }
-
-  void push(int num){
-    if(isEmpty()){
-      minimum =num;
-      v.push_back(num);
+       for(int i=0;i<ans.size();i++){
+        cout<<ans[i]<<" ";
     }
-    else if (num < minimum){
-      v.push_back(2*num -minimum);
-      minimum = num;
-    }
-   else{
-     v.push_back(num);
-   }
-  }
+    cout<<endl;
+    return ans;
+ 
+}
 
-  int top(){
-    if(isEmpty()){
-      cout<<"Stack is empty"<<endl;
-      return 0;
-    }
-
-    int top = v[v.size()-1];
-    if(top<minimum){
-      top = minimum;
-    }
-    return top;
-  }
-
-  void pop(){
-    if(isEmpty()){
-      cout<<"Stack is empty"<<endl;
-      return;
-    }
-
-    int topEle = v[v.size()-1];
-    if(topEle<minimum){
-      minimum = 2*minimum -topEle;
-    }
-    v.pop_back();
-
-  }
-  int getMin(){
-    return minimum;
-  }
-
-  
-};
 int main(int argc, char const *argv[])
 {
-  Stack st;
+  int n;
+  cin>>n;
+  vector<long long>arr();
 
-  st.push(2);
-
-  st.push(3);
-
-  st.push(4);
-
-  st.push(1);
-
-  st.push(5);
-
-  st.push(-1);
-
-  st.push(4);
-
-  cout << st.top() << " " << st.getMin() << endl;
-
-  st.pop();
-
-  cout << st.top() << " " << st.getMin() << endl;
-
-  st.pop();
-
-  cout << st.top() << " " << st.getMin() << endl;
-
-  st.pop();
-
-  cout << st.top() << " " << st.getMin() << endl;
-
-  st.pop();
-
-  cout << st.top() << " " << st.getMin() << endl;
-
-  st.pop();
-
-  cout << st.top() << " " << st.getMin() << endl;
-
-  st.pop();
-
-  cout << st.top() << " " << st.getMin() << endl;
-
-  st.pop();
 
   return 0;
 }

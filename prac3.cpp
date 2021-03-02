@@ -1,48 +1,45 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-void insertAtBottom(stack <int> &st,int val){
-
-	if(st.empty()){
-		st.push(val);
-		return;
+bool isvalid(string s){
+	//we are checking if string is valid or not 
+	//if char == '(' then we push it else  we check for ')' if !st.empty() and st.top = '('
+	// then only we would pop 
+	stack<char>st;
+	for(int i=0;i<s.length();i++){
+		if(s[i] == '('){
+			st.push('(');
+		}
+		else if(!st.empty()){
+			st.pop();
+		}else{
+			return false;
+		}
 	}
-
-	int temp = st.top();
-	st.pop();
-	insertAtBottom(st,val);
-	st.push(temp);
-
+	return st.empty();
 }
-void reverse(stack<int>&st){
-	if(st.empty()){
-		return;
+
+
+
+int validParen(string s){
+	//generating all the substrings of minimum length 2 and length is even
+	int maxlen = 0;
+	for(int i=0;i<s.length();i++){
+		for(int j= i+2;j<=s.length();j+=2){
+			if(isvalid(s.substr(i,j))){
+				maxlen = max(maxlen,j-i);
+			}
+
+
+		}
 	}
-
-	int temp = st.top();
-	st.pop();
-	reverse(st);
-	insertAtBottom(st,temp);
-
-	return;
-
+	return maxlen;
 }
 int main(int argc, char const *argv[])
 {
-	stack<int>st;
-	st.push(1);
-	st.push(2);
-	st.push(3);
-	st.push(4);
+	string s;
+	cin>>s;
 
-	reverse(st);
-	cout << st.top() << " ";
-	st.pop();
-	cout << st.top() << " ";
-	st.pop();
-	cout << st.top() << " ";
-	st.pop();
-	cout << st.top() << " ";
-	st.pop();
+	cout<<validParen(s);
 	return 0;
 }

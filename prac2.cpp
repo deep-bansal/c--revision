@@ -2,41 +2,42 @@
 
 using namespace std;
 
-void transfer(stack<int>&A, stack<int>&B,int n) {
-	for(int i=0;i<n;i++) {
-		B.push(A.top());
-		A.pop();
-	}
+int compress(vector<char>& chars) {
+	vector<char>ans;
+	int start = 0, i = 1;
+	while (i < chars.size()) {
+		int count = 1;
+		while (i < chars.size() && chars[start] == chars[i]) {
+			i++;
+			count++;
+		}
+		if (count == 1) {
+			ans.push_back(chars[start]);
+			
+		} else {
+			ans.push_back(chars[start]);
+			if (count < 10) {
+				ans.push_back(count + '0');
 
-}
+			} else {
 
-void reverse (stack<int>&st) {
-	stack<int> st2;
-	int n = st.size();
-	for (int i = 0; i < n; i++) {
-		int temp = st.top();
-		st.pop();
-		transfer(st,st2,n-1-i);
-		st.push(temp);
-		transfer(st2,st,n-1-i);
+				string y = to_string(count);
+				for (int i = 0; i < y.length(); i++) {
+
+					ans.push_back(y[i]);
+				}
+
+			}
+		}
+		start = i;
+			i++;
 	}
+	  chars =ans;
+    return ans.size();
 }
 
 int main(int argc, char const *argv[])
 {
-	stack<int> st;
-	st.push(1);
-	st.push(2);
-	st.push(3);
-	st.push(4);
-
-	reverse(st);
-	cout << st.top() << " ";
-	st.pop();
-	cout << st.top() << " ";
-	st.pop();
-	cout << st.top() << " ";
-	st.pop();
-	cout << st.top() << " ";
-	st.pop();
+	/* code */
+	return 0;
 }

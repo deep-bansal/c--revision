@@ -1,46 +1,37 @@
 #include <bits/stdc++.h>
 using namespace std;
+string Reduced_String(int k,string s){
+        // Your code goes here
+        string ans = "";
+        stack<char>st;
+        for(int i=0;i<s.length();i++){
+        	int count = 0;
+            while(!st.empty() && count<k && s[i] == st.top()){
+                st.pop();
+                count++;
+            }
+            st.push(s[i]);
 
-void findGreat(int*arr,int n,stack<int>&st){
-
-	int ans[n];
-
-	for (int i = n-1; i >=0 ; --i)
-	{
-		while(!st.empty() && st.top()<=arr[i]){
-			st.pop();
-		}
-		if(st.empty()){
-			ans[i] = -1;
-		}
-		else{
-			ans[i] = st.top();
-		}
-		st.push(arr[i]);
-	}
-
-	for (int i = 0; i < n; ++i)
-	{
-		cout<<ans[i]<<" ";
-	}
-
-}
-
+            
+        }
+        
+        while(!st.empty()){
+            ans += st.top();
+            cout<<st.top()<<endl;
+            st.pop();
+        }
+        
+        reverse(ans.begin(), ans.end());
+      
+        return ans;
+    }
 int main(int argc, char const *argv[])
 {
-    int n;
-    cin>>n;
-    int arr[n];
-    stack<int>st;
-    for(int i= 0;i<n;i++){
-    	int num;
-    	cin>>num;
-    	arr[i] = num;
-    	st.push(num);
-    }
-
-    findGreat(arr,n,st);
-
-
-    return 0;
+	int k;
+	cin>>k;
+	string s;
+	cin>>s;
+	cout<<Reduced_String(k,s)<<endl;
+	
+	return 0;
 }
