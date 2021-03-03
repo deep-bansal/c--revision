@@ -1,40 +1,35 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void stockSpan(int* arr,int n){
-    stack<int>st;
-    st.push(0);
-    cout<<1<<" ";
+queue<char> firstUnique(string str) {
+    queue<char>q;
+    int freq[26] = {0};
 
-    for (int i = 1; i < n; ++i)
-    {
-        while(!st.empty() && arr[st.top()]<= arr[i]){
-            st.pop();
 
-        }        
-        if(st.empty()){
-            cout<<i+1<<" ";
-        }else{
-            cout<<(i-st.top())<<" ";
+    for (int i = 0; i < str.length(); i++) {
+
+        freq[str[i] - 'a']++;
+
+        if (freq[str[i] - 'a'] > 1) {
+            while (!q.empty() && freq[q.front() - 'a'] > 1) {
+                q.pop();
+            }
+        } else {
+            q.push(str[i]);
         }
-
-        st.push(i);
     }
+    return q;
 
-    cout<<"END";
-
-    
 }
 
 int main(int argc, char const *argv[])
 {
-    int n;
-    cin>>n;
-    int arr[n];
-    for(int i=0;i<n;i++){
-        cin>>arr[i];
+    string str = "abcadabbxcyxz";
+    queue<char>ans = firstUnique(str);
+    while(!ans.empty()){
+        cout<<ans.front()<<" ";
+        ans.pop();
     }
 
-    stockSpan(arr,n);
     return 0;
 }

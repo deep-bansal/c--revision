@@ -1,63 +1,31 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define ll long long
-
-ll int hisTogram(ll int* arr, int n) {
-	stack<int>st;
-	st.push(0);
-	ll int maxArea = INT_MIN;
-	int i;
-	for (i = 1; i < n; ++i)
-	{
-
-		if (arr[i] < arr[st.top()]) {
-			while (!st.empty() && arr[i] < arr[st.top()]) {
-				ll int x = st.top();
-				st.pop();
-
-				ll int currArea = 0;
-				if (!st.empty()) {
-					currArea = arr[x] * (i - st.top() - 1);
-					maxArea = max(maxArea, currArea);
-				}
-				else {
-					currArea = arr[x] * i;
-					maxArea = max(maxArea, currArea);
-				}
-			}
-
-
-		}
-		st.push(i);
-	}
-
-	while (!st.empty()) {
-		ll int x = st.top();
-		st.pop();
-		ll int currArea = 0;
-		if (!st.empty()) {
-			currArea = arr[x] * (i - st.top() - 1);
-			maxArea = max(maxArea, currArea);
-		}
-		else {
-			currArea = arr[x] * i;
-			maxArea = max(maxArea, currArea);
-		}
-
-	}
-	return maxArea;
-}
-
 int main(int argc, char const *argv[])
 {
-	int n;
-	cin >> n;
-	ll int arr[n];
-	for (int i = 0; i < n; ++i)
-	{
-		cin >> arr[i];
-	}
+	string a = "abcadabbxcyxz";
+	int visited[256];
+	memset(visited,-1,256);
 
-	cout << hisTogram(arr, n) << endl;
+	int currLen = 1;
+	int maxLen = 1;
+	visited[a[0]] = 0;
+
+	for (int i = 1; i < a.length() ; ++i)
+	{
+		int last_occ = visited[a[i]];
+
+		if(last_occ == -1 || i-currLen > last_occ){ 
+		// last_occ of character is smaller than curr window size
+			currLen += 1;
+		}else{
+			maxLen = max(maxLen,currLen);
+			currLen = i - last_occ;
+			visited[a[i]] = i;
+		}
+		
+	}
+	maxLen = max(maxLen,currLen);
+	cout<<maxLen<<endl;
+
 	return 0;
 }
