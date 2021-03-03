@@ -1,43 +1,66 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
-int compress(vector<char>& chars) {
-	vector<char>ans;
-	int start = 0, i = 1;
-	while (i < chars.size()) {
-		int count = 1;
-		while (i < chars.size() && chars[start] == chars[i]) {
-			i++;
-			count++;
-		}
-		if (count == 1) {
-			ans.push_back(chars[start]);
-			
-		} else {
-			ans.push_back(chars[start]);
-			if (count < 10) {
-				ans.push_back(count + '0');
-
-			} else {
-
-				string y = to_string(count);
-				for (int i = 0; i < y.length(); i++) {
-
-					ans.push_back(y[i]);
-				}
-
-			}
-		}
-		start = i;
-			i++;
+class Stack
+{
+	queue<int>q1,q2;
+	int currSize;
+public:
+	Stack(){
+		currSize = 0;
 	}
-	  chars =ans;
-    return ans.size();
-}
+
+	bool empty(){
+		return currSize == 0;
+	}
+
+	void push(int ele){
+		q2.push(ele);
+		while(!q1.empty()){
+			q2.push(q1.front());
+			q1.pop();
+		}
+		currSize++;
+		queue<int>q = q1;
+		q1 = q2;
+		q2 = q;
+	}
+	void pop(){
+		if(empty()){
+			cout<<"stack is empty"<<endl;
+			return;
+		}
+		q1.pop();
+		currSize--;
+	}
+
+	int top(){
+		if(q1.empty()){
+			cout<<"Stack is Empty"<<endl;
+			return -1;
+		}
+
+		return q1.front();
+	}
+	
+};
 
 int main(int argc, char const *argv[])
 {
-	/* code */
+
+	Stack s;
+	s.push(2);
+	s.push(4);
+	s.push(5);
+	s.push(6);
+	s.push(7);
+
+	while(!s.empty()){
+		cout<<s.top()<<endl;
+		s.pop();
+
+	}
+	cout<<s.top()<<endl;
+	s.pop();
 	return 0;
 }

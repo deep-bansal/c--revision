@@ -1,37 +1,41 @@
 #include <bits/stdc++.h>
 using namespace std;
-string Reduced_String(int k,string s){
-        // Your code goes here
-        string ans = "";
-        stack<char>st;
-        for(int i=0;i<s.length();i++){
-        	int count = 0;
-            while(!st.empty() && count<k && s[i] == st.top()){
-                st.pop();
-                count++;
-            }
-            st.push(s[i]);
 
-            
-        }
-        
-        while(!st.empty()){
-            ans += st.top();
-            cout<<st.top()<<endl;
-            st.pop();
-        }
-        
-        reverse(ans.begin(), ans.end());
-      
-        return ans;
-    }
 int main(int argc, char const *argv[])
 {
-	int k;
-	cin>>k;
-	string s;
-	cin>>s;
-	cout<<Reduced_String(k,s)<<endl;
-	
-	return 0;
+    int n;
+    cin>>n;
+    queue<int>dq;
+    queue<int>q;
+    for (int i = 0; i < n; ++i)
+    {
+        int x;
+        cin>>x;
+        dq.push(x);
+    }
+    
+    for (int i = 0; i < n; ++i)
+    {
+        int x;
+        cin>>x;
+        q.push(x);
+    }
+
+    int totalCount = 0;
+    while(!q.empty()){
+        if(dq.front() == q.front()){
+            totalCount++;
+            dq.pop();
+            q.pop();
+        }
+        else{
+            while(dq.front() != q.front()){
+                dq.push(dq.front());
+                dq.pop();
+                totalCount++;
+            }
+        }
+    }
+    cout<<totalCount<<endl;
+    return 0;
 }

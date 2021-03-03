@@ -1,45 +1,72 @@
 #include<bits/stdc++.h>
 using namespace std;
+class Queue
+{
+	stack<int>s1,s2;
+	int currSize;
+public:
+	Queue(){
+		currSize = 0;
+	}
 
-bool isvalid(string s){
-	//we are checking if string is valid or not 
-	//if char == '(' then we push it else  we check for ')' if !st.empty() and st.top = '('
-	// then only we would pop 
-	stack<char>st;
-	for(int i=0;i<s.length();i++){
-		if(s[i] == '('){
-			st.push('(');
+	void push(int ele){
+		s1.push(ele);
+		currSize++;
+	}
+
+	bool empty(){
+		return currSize == 0;
+	}
+
+	void pop(){
+		if(s1.empty()){
+			cout<<"Queue is Empty"<<endl;
+			return;
 		}
-		else if(!st.empty()){
-			st.pop();
-		}else{
-			return false;
+		while(!s1.empty()){
+			s2.push(s1.top());
+			s1.pop();
+		}
+		s2.pop();
+		currSize--;
+		while(!s2.empty()){
+			s1.push(s2.top());
+			s2.pop();
 		}
 	}
-	return st.empty();
-}
-
-
-
-int validParen(string s){
-	//generating all the substrings of minimum length 2 and length is even
-	int maxlen = 0;
-	for(int i=0;i<s.length();i++){
-		for(int j= i+2;j<=s.length();j+=2){
-			if(isvalid(s.substr(i,j))){
-				maxlen = max(maxlen,j-i);
-			}
-
-
+	int front(){
+		if(s1.empty()){
+			cout<<"Queue is Empty"<<endl;
+			return -1;
 		}
+
+		while(!s1.empty()){
+			s2.push(s1.top());
+			s1.pop();
+		}
+		int x = s2.top();
+		while(!s2.empty()){
+			s1.push(s2.top());
+			s2.pop();
+		}
+		return x;
 	}
-	return maxlen;
-}
+};
 int main(int argc, char const *argv[])
 {
-	string s;
-	cin>>s;
+	Queue q;
+	q.push(2);
+	q.push(4);
+	q.push(6);
+	q.push(7);
+	q.push(8);
+	q.push(9);
 
-	cout<<validParen(s);
+	while(!q.empty()){
+		cout<<q.front()<<" ";
+		q.pop();
+	}
+
+	
 	return 0;
 }
