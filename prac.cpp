@@ -1,81 +1,43 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class Stack
-{
-	queue<int>q1,q2;
-	int currentSize;
-public:
-	Stack(){
-		currentSize = 0;
-	}
+void throughSort(int*arr,int n,int target){
 
-	bool isEmpty(){
-		return currentSize == 0;
-	}
+	//time complexity o(nlogn)
 
+		int a = -1,b = -1;
+		sort(arr,arr+n);
 
-	void push(int ele){
-		q1.push(ele);
-		currentSize++;
-	}
-
-	void pop(){
-		if(isEmpty()){
-			cout<<"Queue is Empty"<<endl;
-			return;
+		int left = 0,right = n-1;
+		while(left<right){
+			if(arr[left] + arr[right] == target){
+				a=left;
+				b = right;
+				break;
+			}
+			else if (arr[left] + arr[right] < target){
+				left++;
+			}
+			else{
+				right--;
+			}
 		}
-
-		while(q1.size()!= 1 ){
-			q2.push(q1.front());
-			q1.pop();
+		if(a != -1 and b!= -1){
+		cout<<a<<" "<<b<<endl;	
 		}
-
-		q1.pop();
-		currentSize--;
-		queue<int>qu = q1;
-		q1 = q2;
-		q2 = qu;
-	}
-
-	int top(){
-		if(isEmpty()){
-			cout<<"Queue is Empty"<<endl;
-			return -1;
+		else{
+			cout<<"No Pair possible"<<endl;
 		}
-
-		while(q1.size()!= 1 ){
-			q2.push(q1.front());
-			q1.pop();
-		}
-
-		int x = q1.front();
-		q1.pop();
-		q2.push(x);
-
-		queue<int>q = q1;
-		q1 = q2;
-		q2 = q;
-
-		return x;
-	}
 	
-};
-
+}
 int main(int argc, char const *argv[])
 {
+	int arr[] = {2,7,11,15};
+	int n = sizeof(arr)/sizeof(int);
+	int target = 9;
 
-	Stack s;
-	s.push(2);
-	s.push(4);
-	s.push(5);
-	s.push(6);
-	s.push(7);
+	throughSort(arr,n,target); 
 
-	while(!s.isEmpty()){
-		cout<<s.top()<<endl;
-		s.pop();
 
-	}
-	
+	return 0;
 }
