@@ -1,31 +1,57 @@
 #include<bits/stdc++.h>
 using namespace std;
-int main(int argc, char const *argv[])
-{
-	string a = "abcadabbxcyxz";
-	int visited[256];
-	memset(visited,-1,256);
 
-	int currLen = 1;
-	int maxLen = 1;
-	visited[a[0]] = 0;
+   int maxSatisfied(vector<int>& customers, vector<int>& grumpy, int X) {
+        int start = 0,end = 0;
+        int count =0,maxCount = 0,idx = -1;
+        while(end<customers.size()){
+            
+            if(grumpy[end] == 0){
+                count += customers[end];  
+                end++;
+            }            
+            else if(grumpy[end] == 1 && customers[end] == 0){
 
-	for (int i = 1; i < a.length() ; ++i)
-	{
-		int last_occ = visited[a[i]];
+                end++;
+                continue;
+            }
+            else if(grumpy[end] == 1 && customers[end] > 0 && X>0){
+                idx = end;
+                while(X>0 && end < customers.size()){
+                    count += customers[end];
+                    X--;
+                    end++;
+                }
 
-		if(last_occ == -1 || i-currLen > last_occ){ 
-		// last_occ of character is smaller than curr window size
-			currLen += 1;
-		}else{
-			maxLen = max(maxLen,currLen);
-			currLen = i - last_occ;
-			visited[a[i]] = i;
-		}
-		
-	}
-	maxLen = max(maxLen,currLen);
-	cout<<maxLen<<endl;
+            
+            }
+            else if (grumpy[end] == 1 && customers[end] > 0 && X == 0){
+                maxCount = max(maxCount,count);
+                
+                while(start <= idx){
+                    if(grumpy[start] == 1){
+                        count -= customers[start];
+                        start++;
+                    }
+                }
+                  X = X+1;              
+                
+            }
+            else if (grumpy[end] == 1 && customers[end] == 0 && X == 0){
+                end++;                
+            }
+            maxCount =max(maxCount,count);
+        
+        }       
+        return maxCount;
+        
+    }
 
-	return 0;
-}
+ int main(int argc, char const *argv[])
+ {
+ 	vector<int> v ={1,0,1,3,2,1,7,5};
+ 	vector<int> v2 = {0,1,0,1,0,1,0,1};
+ 	cout<<maxSatisfied(v,v2,3);
+ 	
+ 	return 0;
+ }

@@ -1,18 +1,38 @@
 #include <bits/stdc++.h>
 using namespace std;
-class prac8
+ 
+int findSubArray(int arr[], int n)
 {
-public:
-    int i;
-    prac8(int i){
-        this->i = i;
+    int sum = 0;
+    int maxsize = -1, startindex;
+ 
+    for (int i = 0; i < n - 1; i++) {
+        sum = (arr[i] == 0) ? -1 : 1;
+ 
+        for (int j = i + 1; j < n; j++) {
+            (arr[j] == 0) ? (sum += -1) : (sum += 1);
+ 
+            if (sum == 0 && maxsize < j - i + 1) {
+                maxsize = j - i + 1;
+                startindex = i;
+            }
+        }
     }
-    
-};
-
-int main(int argc, char const *argv[])
+    if (maxsize == -1)
+        cout << "No such subarray";
+    else
+        cout << startindex << " to "
+             << startindex + maxsize - 1;
+ 
+    return maxsize;
+}
+ 
+/* Driver code*/
+int main()
 {
-    prac8 c(102);
-    cout<<c.i<<endl;
+    int arr[] = { 1, 0, 0, 1, 0, 1, 1 };
+    int size = sizeof(arr) / sizeof(arr[0]);
+ 
+    findSubArray(arr, size);
     return 0;
 }
