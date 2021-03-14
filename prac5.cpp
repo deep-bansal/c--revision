@@ -1,41 +1,23 @@
 #include <bits/stdc++.h>
 using namespace std;
-
-int main(int argc, char const *argv[])
-{
-    int n;
-    cin>>n;
-    queue<int>dq;
-    queue<int>q;
-    for (int i = 0; i < n; ++i)
-    {
-        int x;
-        cin>>x;
-        dq.push(x);
-    }
-    
-    for (int i = 0; i < n; ++i)
-    {
-        int x;
-        cin>>x;
-        q.push(x);
-    }
-
-    int totalCount = 0;
-    while(!q.empty()){
-        if(dq.front() == q.front()){
-            totalCount++;
-            dq.pop();
-            q.pop();
-        }
-        else{
-            while(dq.front() != q.front()){
-                dq.push(dq.front());
-                dq.pop();
-                totalCount++;
+int countNegatives(vector<vector<int>>& grid) {
+        int count  = 0;
+        for(int i=0;i<grid.size();i++){
+            int j = grid[i].size()-1;
+            while(grid[i][j]<0 && j>=0){
+                count++;
+                j--;
             }
         }
+        return count;
+        
     }
-    cout<<totalCount<<endl;
-    return 0;
+int main(int argc, char const *argv[])
+{
+    vector<vector<int> > v = {{4,3,2,-1},
+                               {3,2,1,-1},
+                               {1,1,-1,-2},
+                               {-1,-1,-2,-3}};
+    cout<<countNegatives(v)<<endl;
+
 }

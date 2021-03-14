@@ -1,69 +1,59 @@
 #include<bits/stdc++.h>
 using namespace std;
-class Queue
-{
-    stack<int>s1, s2;
-    int currSize;
-public:
-    Queue() {
-        currSize = 0;
-    }
+  string numberToWords(int num) {
+        string single_dig[]= {"","One","Two","Three","Four",
+                              "Five","Six","Seven","Eight","Nine"};        
+        string double_dig[] ={"","Eleven","Twelve","Thirteen","Fourteen",
+                              "Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"};        
+        string ten_multiple[]={"","Ten","Twenty","Thirty","Forty","Fifty",
+                               "Sixty","Seventy","Eighty","Ninety"};        
+        string ten_power[]={"Hundred","Thousand","Million","Billion"};        
+        string output;
+        int i = 3,p=9;
+        while(i>=0){
+            int y = pow(10,p);
+            int div = num/y;
+            if(div>=100){
+                int x = div/100;
 
-    void push(int ele) {
-        if (s1.empty()) {
-            s1.push(ele);
-            currSize++;
-            return;
-        }
-        while(!s1.empty()){
-            s2.push(s1.top());
-            s1.pop();
-        }
-        s1.push(ele);
-        currSize++;
-        while(!s2.empty()){
-            s1.push(s2.top());
-            s2.pop();
-        }
-    }
+                output+=single_dig[x]+" "+ten_power[0]+" ";
+                div = div%100;
+            }
+            if(div>=10){
+                int x = div/10;
 
-    bool empty() {
-        return currSize == 0;
-    }
-
-    void pop() {
-        if (s1.empty()) {
-            cout << "Queue is Empty" << endl;
-            return;
+                output += ten_multiple[x]+" ";
+                div = div%10;
+            }            
+            if(num>=1000000000 && i==3){
+                output += single_dig[div] + " " +ten_power[3]+" ";
+            }else if(num>=1000000 && i==2) {
+                output += single_dig[div] + " " +ten_power[2]+" ";
+            }else if(num>=1000 && i==1){
+                output += single_dig[div] + " " +ten_power[1]+" ";
+            }else if(num>=100 && i==0){
+                output += single_dig[div] + " " +ten_power[0]+" ";
+            }
+            i--;
+            num = num%y;
+            if(p==3){
+                p = p-1;
+                continue;
+            }
+            p =p -3;
         }
-        s1.pop();
-        currSize--;
-    }
-    int front() {
-        if (s1.empty()) {
-            cout << "Queue is Empty" << endl;
-            return -1;
+        if(num>=10){
+            int div = num/10;
+            output+=ten_multiple[div]+" ";
+            num = num%10;
         }
-        return s1.top();
-    }
-};
+        if(num>0){
+            output += single_dig[num];
+        }
+        return output;       
+}
 int main(int argc, char const *argv[])
 {
-    Queue q;
-    q.push(2);
-    q.push(4);
-    q.push(6);
-    q.push(7);
-    q.push(8);
-    q.push(9);
-
-    while (!q.empty()) {
-        cout << q.front() << " ";
-        q.pop();
-    }
-    cout << q.front() << " ";
-        q.pop();
-
-
+    cout<<numberToWords(123)<<endl;
     return 0;
 }
