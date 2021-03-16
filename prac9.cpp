@@ -159,7 +159,7 @@ void reveseLL(node*&head){
 }
 
 node*temp;
-void reverseLLRec(node* &head){
+void reverseLLRec(node* head){
     if(head == NULL || head->next == NULL) { temp = head; return;}
 
     reverseLLRec(head->next);
@@ -199,12 +199,12 @@ int main(int argc, char const *argv[])
     cout<<head;
     // reveseLL(head);
     // cout<<head;
-    // reverseLLRec(head);
-    // cout<<temp;
-    node* ans =kthNodeFromLast(head,3);
-    if(ans != NULL){
-        cout<<ans->data<<endl;
-    }
+    reverseLLRec(head);
+    cout<<temp;
+    // node* ans =kthNodeFromLast(head,3);
+    // if(ans != NULL){
+    //     cout<<ans->data<<endl;
+    // }
     
     return 0;
 }

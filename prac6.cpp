@@ -1,61 +1,75 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-int getPrec(char ch){
-  if(ch == '^'){
-    return 3;
-  }
-  else if (ch == '*' || ch=='/'){
-    return 2;
-  }
-  else if(ch == '+' || ch=='-'){
-    return 1;
-  }
-  else if(ch == ')' || ch == '('){
-    return 0;
-  }
-  return -1;
-}
-
-void convertInfixToPostifx(string str){
-  stack<char>st;
-  string output;
-
-  for(int i=0;i<str.length();i++){
-    if(getPrec(str[i]) == -1){
-      output+=str[i];
-    }else{
-      if(str[i] == '('){
-        st.push(str[i]);
-      }
-      else if(str[i] == ')'){
-        while(!st.empty() && st.top()!= '('){
-          output += st.top();
-          st.pop();
-        }
-        st.pop();
-      }else{
-        while(!st.empty() && getPrec(st.top())>=getPrec(str[i]) && st.top()!= '('){
-        output += st.top();
-        st.pop();
-      }
-      st.push(str[i]);
-
-      }
-      
+class node
+{
+public:
+    int data;
+    node* next;
+    node(int d){
+        data = d;
+        next = NULL;
     }
+
+};
+
+void insertAtHead (node*&head,int d){
+
+  node* newNode = new node(d);
+  
+  if(head == NULL){  
+    newNode->next = newNode;
+    head = newNode;
+    return;
   }
-  while(!st.empty()){
-    output += st.top();
-    st.pop();
+
+  newNode->next = head;
+  node* temp = head;
+  while(temp->next!=head){
+    temp = temp->next;
   }
-  cout<<output<<endl;
+  temp->next = newNode;
+  head = newNode;
+}
+void insertAtTail (node*&head,int d){
+
+  node* newNode = new node(d);
+  
+  if(head == NULL){  
+    newNode->next = newNode;
+    head = newNode;
+    return;
+  }
+
+  node* temp = head;
+  while(temp->next!=head){
+    temp = temp->next;
+  }
+  temp->next = newNode;
+  newNode->next=head;
+}
+
+void printList(node*head){
+    node*temp = head;
+    while(temp->next!=head){
+    cout<<temp->data<<" ";
+    temp = temp->next;
+  }
+  cout<<temp->data<<" ";
+  cout<<endl;
 
 }
+
 
 int main(int argc, char const *argv[])
 {
-  string str = "(A+B)*(C-D)*E";
-  convertInfixToPostifx(str);
+  node* head= NULL;
+  insertAtHead(head,3);
+  insertAtHead(head,2);
+  insertAtHead(head,1);
+  insertAtTail(head,4);
+  insertAtTail(head,5);
+  printList(head);
+  
   return 0;
 }

@@ -1,59 +1,118 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
-  string numberToWords(int num) {
-        string single_dig[]= {"","One","Two","Three","Four",
-                              "Five","Six","Seven","Eight","Nine"};        
-        string double_dig[] ={"","Eleven","Twelve","Thirteen","Fourteen",
-                              "Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"};        
-        string ten_multiple[]={"","Ten","Twenty","Thirty","Forty","Fifty",
-                               "Sixty","Seventy","Eighty","Ninety"};        
-        string ten_power[]={"Hundred","Thousand","Million","Billion"};        
-        string output;
-        int i = 3,p=9;
-        while(i>=0){
-            int y = pow(10,p);
-            int div = num/y;
-            if(div>=100){
-                int x = div/100;
 
-                output+=single_dig[x]+" "+ten_power[0]+" ";
-                div = div%100;
-            }
-            if(div>=10){
-                int x = div/10;
+class node
+{
+public:
+    int data;
+    node* next;
+    node(int d){
+        data = d;
+        next = NULL;
+    }
 
-                output += ten_multiple[x]+" ";
-                div = div%10;
-            }            
-            if(num>=1000000000 && i==3){
-                output += single_dig[div] + " " +ten_power[3]+" ";
-            }else if(num>=1000000 && i==2) {
-                output += single_dig[div] + " " +ten_power[2]+" ";
-            }else if(num>=1000 && i==1){
-                output += single_dig[div] + " " +ten_power[1]+" ";
-            }else if(num>=100 && i==0){
-                output += single_dig[div] + " " +ten_power[0]+" ";
-            }
-            i--;
-            num = num%y;
-            if(p==3){
-                p = p-1;
-                continue;
-            }
-            p =p -3;
-        }
-        if(num>=10){
-            int div = num/10;
-            output+=ten_multiple[div]+" ";
-            num = num%10;
-        }
-        if(num>0){
-            output += single_dig[num];
-        }
-        return output;       
+};
+
+int length(node*head){
+    int len = 0;
+    while(head != NULL){
+        len++;
+        head = head->next;
+    }
+    return len;
 }
+void insertAtTail(node*&head,int data){
+    if(head == NULL){
+        head = new node(data);
+        return;
+    }
+    node*temp = head;
+    while(temp->next != NULL){
+        temp = temp->next;
+    }
+    temp->next = new node(data);
+    return;
+}
+
+node* detectCycle(node* head){
+    node* slow = head;
+    node* fast = head;
+    while(fast!=NULL and fast->next != NULL){
+        fast = fast->next->next;
+        slow = slow->next;
+
+        if(fast == slow){
+            return slow;
+        }
+    }
+    return NULL;
+}
+
+
+void printList(node* head){
+    if(head == NULL){
+        cout<<"List is Empty"<<endl;
+        return;
+    }
+
+    while(head != NULL){
+        cout<<head->data<<" ";
+        head= head->next;
+    }
+    cout<<endl;
+}
+
+void buildLL(node* &head){
+    int d;
+    cin>>d;
+    while(d!=-1){
+        insertAtTail(head,d);
+        cin>>d;
+
+    }
+}
+
+void removeCycle(node*head,node* meetPoint){
+    node* A = head;
+    node*prev = NULL;
+    while(A!=meetPoint){
+        A = A->next;
+        prev= meetPoint;
+        meetPoint = meetPoint->next;
+    }
+    prev->next = NULL;
+}
+
+
+istream& operator >> (istream& is,node*&head){
+    buildLL(head);
+    return is;
+}
+
+ostream& operator << (ostream& os,node*&head){
+    printList(head);
+    return os;
+}
+
+
 int main(int argc, char const *argv[])
 {
-    cout<<numberToWords(123)<<endl;
+    node*head = NULL;
+    // cin>>head;
+
+    // cout<<head;
+    insertAtTail(head,1);
+    insertAtTail(head,2);
+    insertAtTail(head,3);
+    insertAtTail(head,4);
+    insertAtTail(head,5);
+    insertAtTail(head,6);
+    insertAtTail(head,7);
+    head->next->next->next->next->next->next->next = head->next->next;
+    cout<<head;
+
+    removeCycle(head,detectCycle(head));
+    cout<<head;
+    
     return 0;
 }
