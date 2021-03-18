@@ -64,12 +64,10 @@ void printList(node*head){
 int main(int argc, char const *argv[])
 {
   node* head= NULL;
-  insertAtHead(head,3);
   insertAtHead(head,2);
-  insertAtHead(head,1);
-  insertAtTail(head,4);
-  insertAtTail(head,5);
-  printList(head);
+  node*temp = head;
+  cout<<temp<<" "<<head<<endl;
+
   
   return 0;
 }

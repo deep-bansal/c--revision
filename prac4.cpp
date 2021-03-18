@@ -34,7 +34,7 @@ void insertAtTail(node*&head,int data){
     return;
 }
 
-node* detectCycle(node* head){
+bool detectCycle(node* head){
     node* slow = head;
     node* fast = head;
     while(fast!=NULL and fast->next != NULL){
@@ -42,10 +42,10 @@ node* detectCycle(node* head){
         slow = slow->next;
 
         if(fast == slow){
-            return slow;
+            return true;
         }
     }
-    return NULL;
+    return false;
 }
 
 
@@ -101,18 +101,17 @@ int main(int argc, char const *argv[])
     // cin>>head;
 
     // cout<<head;
-    insertAtTail(head,1);
-    insertAtTail(head,2);
     insertAtTail(head,3);
-    insertAtTail(head,4);
-    insertAtTail(head,5);
-    insertAtTail(head,6);
-    insertAtTail(head,7);
-    head->next->next->next->next->next->next->next = head->next->next;
-    cout<<head;
+    insertAtTail(head,2);
+    insertAtTail(head,0);
+    insertAtTail(head,-4);
+    head->next->next->next->next = head->next;
+    // cout<<head;
 
-    removeCycle(head,detectCycle(head));
-    cout<<head;
+    cout<<detectCycle(head);
+
+    // removeCycle(head,detectCycle(head));
+    // cout<<head;
     
     return 0;
 }
