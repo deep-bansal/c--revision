@@ -71,11 +71,14 @@ int numComponents(ListNode* head, vector<int>& G) {
 
 int main(int argc, char const *argv[])
 {
-	ListNode*head = NULL;
-	cin>>head;
-	vector<int>G = {0,1,3};
-	cout<<numComponents(head,G);
-    
+	// ListNode*head = NULL;
+	// cin>>head;
+	// vector<int>G = {0,1,3};
+	// cout<<numComponents(head,G);
+    int c= 3;
+    while(c--){
+    	cout<<c<<endl;
+    }
 
     return 0;
 }
