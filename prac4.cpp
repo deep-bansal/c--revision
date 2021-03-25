@@ -1,117 +1,125 @@
 #include <bits/stdc++.h>
 using namespace std;
-
 class node
 {
 public:
     int data;
-    node* next;
+    node* left;
+    node* right;
     node(int d){
         data = d;
-        next = NULL;
+        left = NULL;
+        right = NULL;
     }
-
 };
 
-int length(node*head){
-    int len = 0;
-    while(head != NULL){
-        len++;
-        head = head->next;
-    }
-    return len;
-}
-void insertAtTail(node*&head,int data){
-    if(head == NULL){
-        head = new node(data);
-        return;
-    }
-    node*temp = head;
-    while(temp->next != NULL){
-        temp = temp->next;
-    }
-    temp->next = new node(data);
-    return;
-}
-
-bool detectCycle(node* head){
-    node* slow = head;
-    node* fast = head;
-    while(fast!=NULL and fast->next != NULL){
-        fast = fast->next->next;
-        slow = slow->next;
-
-        if(fast == slow){
-            return true;
-        }
-    }
-    return false;
-}
-
-
-void printList(node* head){
-    if(head == NULL){
-        cout<<"List is Empty"<<endl;
-        return;
-    }
-
-    while(head != NULL){
-        cout<<head->data<<" ";
-        head= head->next;
-    }
-    cout<<endl;
-}
-
-void buildLL(node* &head){
+node* buildTree(){
     int d;
     cin>>d;
-    while(d!=-1){
-        insertAtTail(head,d);
-        cin>>d;
+    if(d == -1){
+        return NULL;
+    }
+    node* root = new node(d);
+    root->left = buildTree();
+    root->right = buildTree();
+    return root;
+}
 
+void bfs(node* root) {
+    queue<node*> q;
+    q.push(root);
+    q.push(NULL);
+    while (q.size() > 1) {
+        node* front = q.front();
+        if (front == NULL) {
+            cout << endl;
+            q.push(NULL);
+        }
+        else {
+            cout << front->data << " ";
+            if (front->left) {
+                q.push(front->left);
+            }
+            if (front->right) {
+                q.push(front->right);
+            }
+        }
+        q.pop();
     }
 }
+// int i = 0;
+// node* buildTreePreandIn(int* pre, int* in,int start,int end){
+//     if(start>end){
+//         return NULL;
+//     }
 
-void removeCycle(node*head,node* meetPoint){
-    node* A = head;
-    node*prev = NULL;
-    while(A!=meetPoint){
-        A = A->next;
-        prev= meetPoint;
-        meetPoint = meetPoint->next;
+//     node* root = new node(pre[i]);
+//     int idx = -1;
+//     for (int k = start; k <= end ; ++k)
+//     {
+//         if(pre[i] == in[k]){
+//             idx = k;
+//             break;
+//         }
+//     }
+//     i++;
+//     root->left = buildTreePreandIn(pre,in,start,idx-1);
+//     root->right = buildTreePreandIn(pre,in,idx+1,end);
+
+//     return root;
+// }
+
+// int i = 8;
+// node* buildTreePostandIn(int* post,int* in,int start,int end){
+//     if(start > end) return NULL;
+
+//     node* root = new node(post[i]);
+//     int idx = -1;
+//     for(int k= end;k>=start;k--){
+//         if(in[k] == post[i]){
+//             idx = k;
+//             break;
+//         }
+//     }
+//     i--;
+//     root->right = buildTreePostandIn(post,in,idx +1,end);
+//     root->left = buildTreePostandIn(post,in,start,idx-1);
+//     return root;
+// }
+
+int i = 0;
+node* buildTreePreandPost(int* pre,int* post,int start,int end){
+    if(start > end){
+        return NULL;
     }
-    prev->next = NULL;
+
+    node* root = new node(pre[i]);
+    int idx = -1;
+    for(int k = start;k<=end;k++){
+        if(pre[k] == post[end-1]){
+            idx = k;
+            break;
+        }
+    }
+    i++;
+    root->left = buildTreePreandPost(pre,post,i,idx-1);
+    root->right= buildTreePreandPost(pre,post,idx,end);
+
+    return root;
+    
 }
-
-
-istream& operator >> (istream& is,node*&head){
-    buildLL(head);
-    return is;
-}
-
-ostream& operator << (ostream& os,node*&head){
-    printList(head);
-    return os;
-}
-
 
 int main(int argc, char const *argv[])
 {
-    node*head = NULL;
-    // cin>>head;
+    // node* root = buildTree();
+    // cout<<endl;
+    int post[] = {3,5,6,4,2,9,8,7,1};
+    int pre[] = {1,2,3,4,5,6,7,8,9};
+    // node* root =  buildTreePostandIn(post,in,0,8);   
+    node*root = buildTreePreandPost(pre,post,0,8);
+    bfs(root);
+    cout<<endl;
 
-    // cout<<head;
-    insertAtTail(head,3);
-    insertAtTail(head,2);
-    insertAtTail(head,0);
-    insertAtTail(head,-4);
-    head->next->next->next->next = head->next;
-    // cout<<head;
-
-    cout<<detectCycle(head);
-
-    // removeCycle(head,detectCycle(head));
-    // cout<<head;
-    
+   
     return 0;
 }
