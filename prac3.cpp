@@ -1,137 +1,93 @@
 #include <bits/stdc++.h>
 using namespace std;
-
 class node
 {
 public:
     int data;
+    node* left;
     node* right;
-    node* down;
     node(int d){
         data = d;
+        left = NULL;
         right = NULL;
-        down = NULL;
     }
-
 };
 
-// void insertAtHead(node* &head, int data) {
-//     if (head == NULL) {
-//         head = new node(data);
-//         return;
-//     }
-
-//     node* temp = new node(data);
-//     temp->next = head;
-//     head = temp;
-//     return;
-// }
-
-void insertAtDown(node* &head,int data)
-{
-    if(head==NULL)
-    {
-        head=new node(data);
-        return;
+node* buildTree(){
+    int d;
+    cin>>d;
+    if(d == -1){
+        return NULL;
     }
-    node*temp=head;
-    while(temp->down!=NULL)
-    {
-        temp=temp->down;
-
-    }
-    temp->down=new node(data);
-    return;
+    node* root = new node(d);
+    root->left = buildTree();
+    root->right = buildTree();
+    return root;
 }
 
-
-// int length(node*head){
-//     int len = 0;
-//     while(head != NULL){
-//         len++;
-//         head = head->next;
-//     }
-//     return len;
-// }
-
-
-void printList(node* head){
-    if(head == NULL){
-        cout<<"List is Empty"<<endl;
-        return;
-    }
-
-    while(head != NULL){
-        cout<<head->data<<" ";
-        head= head->down;
-    }
-    cout<<endl;
+void printTree(node* root){
+    if(root == NULL) return;
+    cout<<root->data<<" ";
+    printTree(root->left);
+    printTree(root->right);
 }
 
-// void buildLL(node* &head){
-//     int d;
-//     cin>>d;
-//     while(d!=-1){
-//         insertAtTail(head,d);
-//         cin>>d;
+int countNodes(node* root){
+    if(root == NULL) return 0;
+    int count  = 1 + countNodes(root->left) + countNodes(root->right);
+    return count;
+}
 
-//     }
-// }
+int height(node* root){
+    if(root == NULL) return -1;
+    if(root->left == NULL and root->right == NULL) return 0;
+    int h = 1 + max(height(root->left),height(root->right));
+    return h;
+}
 
-node* mergeTwoLLRec(node*a,node*b){
-    if(a == NULL) return b;
-    if(b == NULL) return a;
-
-    node*c;
-    if(a->data <= b->data){
-        c = a;
-        c->down = mergeTwoLLRec(a->down,b);
-    }else{
-        c = b;
-        c->down = mergeTwoLLRec(a,b->down);
+void bfs(node* root) {
+    queue<node*> q;
+    q.push(root);
+    q.push(NULL);
+    while (q.size() > 1) {
+        node* front = q.front();
+        if (front == NULL) {
+            cout << endl;
+            q.push(NULL);
+        }
+        else {
+            cout << front->data << ", ";
+            if (front->left) {
+                q.push(front->left);
+            }
+            if (front->right) {
+                q.push(front->right);
+            }
+        }
+        q.pop();
     }
-    return c;
 }
 
-node* flatLL(node*head)
-{
-    if(head==NULL || head->right==NULL)
-    {
-        return head;
-    }
-    node*c=mergeTwoLLRec(head,flatLL(head->right));
-    return c;
+int replaceWithSumDesc(node* &root){
+    if(root == NULL) return 0;
+    int leftData=0,rightData=0;
+    if(root->left) leftData = replaceWithSumDesc(root->left);
+    if(root->right) rightData = replaceWithSumDesc(root->right);
+
+    root->data += leftData + rightData;
+
+    return root->data;
 }
 
-// istream& operator >> (istream& is,node*&head){
-//     buildLL(head);
-//     return is;
-// }
-
-ostream& operator << (ostream& os,node*&head){
-    printList(head);
-    return os;
-}
 
 int main(int argc, char const *argv[])
 {
-    // node*a = NULL;
-    node* head = NULL;
-    insertAtDown(head, 3);
-    insertAtDown(head, 9);
-    insertAtDown(head, 10);
-    insertAtDown(head, 15);
-    insertAtDown(head->right, 4);
-    insertAtDown(head->right, 14);
-    insertAtDown(head->right, 20);
-    insertAtDown(head->right, 25);
-    insertAtDown(head->right, 35);
-    insertAtDown(head->right->right, 1);
-    insertAtDown(head->right->right, 10);
-    insertAtDown(head->right->right, 12);
-    head= flatLL(head);
-    printList(head);
-
-    
+    node* root = buildTree();
+    printTree(root);
+    cout<<endl;
+    // replaceWithSumDesc(root);
+    bfs(root);
+    cout<<endl;
+   
     return 0;
 }
