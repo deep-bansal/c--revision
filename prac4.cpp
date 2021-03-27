@@ -95,17 +95,20 @@ node* buildTreePreandPost(int* pre,int* post,int start,int end){
 
     node* root = new node(pre[i]);
     int idx = -1;
-    for(int k = start;k<=end;k++){
+    for (int k = start; k <= end ; ++k)
+    {
         if(pre[k] == post[end-1]){
             idx = k;
             break;
         }
     }
     i++;
-    root->left = buildTreePreandPost(pre,post,i,idx-1);
-    root->right= buildTreePreandPost(pre,post,idx,end);
 
+    root->left = buildTreePreandPost(pre,post,i,idx-1);
+    root->right = buildTreePreandPost(pre,post,idx,end);
     return root;
+
+
     
 }
 
