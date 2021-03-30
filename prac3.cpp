@@ -161,8 +161,9 @@ node* buildHBal(int*arr,int start,int end){
 
 int main(int argc, char const *argv[])
 {
-    // node* root = buildTree();
-    // printTree(root);
+    node* root = buildTree();
+    printTree(root);
+    cout<<endl;
     // cout<<endl;
     // replaceWithSumDesc(root);
     // bfs(root);
@@ -171,8 +172,9 @@ int main(int argc, char const *argv[])
     // bfs(root);
     // cout<<endl;
     // leftViewPrint(root);
-    // int maxLevel = -1;
-    // leftView(root,0,maxLevel);
+    int maxLevel = -1;
+    leftView(root,0,maxLevel);
+    cout<<endl;
 
    // Pair ans = isHeightBalanced(root);
    // if(ans.isBal){
@@ -182,10 +184,10 @@ int main(int argc, char const *argv[])
    //  cout<<"false"<<endl;
    // }
 
-    int arr[] = {1,2,3,4,5,6,7,8,9};
-    node* root = buildHBal(arr,0,8);
-    bfs(root);
-    cout<<endl;
+    // int arr[] = {1,2,3,4,5,6,7,8,9};
+    // node* root = buildHBal(arr,0,8);
+    // bfs(root);
+    // cout<<endl;
 
    
     return 0;

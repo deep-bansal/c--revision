@@ -127,8 +127,8 @@ int main(int argc, char const *argv[])
     cout<<endl;
     // printNodesAtDistK(root,root->left->left->right,3);
     // cout<<endl;
-    // cout<<minDepthLeafNode(root)<<endl;
-    cout<<maxSumPath(root)<<endl;
+    cout<<minDepthLeafNode(root)<<endl;
+    // cout<<maxSumPath(root)<<endl;
 
    
     return 0;
