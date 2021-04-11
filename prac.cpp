@@ -1,110 +1,136 @@
 #include <bits/stdc++.h>
 using namespace std;
+
+template <typename T>
 class node
 {
 public:
-	int data;
-	node* left;
-	node* right;
-	node(int d){
-		data = d;
-		left = NULL;
-		right = NULL;
+	string key;
+	T value;
+	node<T>*next;
+	node(string k,T val){
+		key = k;
+		value = val;
+		next = NULL;
 	}
-	
+	~node(){
+		if(next != NULL){
+			delete next;
+		}
+	}
 };
 
-node* buildTree(){
-	int d;
-	cin>>d;
-	if(d == -1){
+template <typename T>
+class hashMap
+{
+	node<T>** arr;
+	int currSize;
+	int totalSize;
+
+	int hashFunction(string k){
+		int idx = 0;
+		int length = k.length();
+		int multiplicationFactor = 1;
+		for (int i = 0; i < length; ++i)
+		{
+			
+		  int res =((k[length-i-1]%totalSize)*(multiplicationFactor*totalSize)) % totalSize;
+		  idx = ((idx%totalSize) + (res%totalSize))%totalSize;
+		  multiplicationFactor = ((multiplicationFactor%totalSize) * (47%totalSize))%totalSize;
+
+		}
+		return idx;
+	}
+
+	void reHash(){
+		node<T>** oldArr = arr;
+		int oldSize = totalSize;
+		totalSize = 2* totalSize;
+		arr = new node<T>*[totalSize];
+		currSize = 0;
+		for (int i = 0; i < totalSize; ++i)
+		{
+			arr[i] = NULL;
+		}
+		for (int i = 0; i < oldSize; ++i)
+		{
+			if(oldArr[i] != NULL){
+				node<T>* temp = oldArr[i];
+				while(temp != NULL){
+					insert(temp->key,temp->value);
+					temp = temp->next;
+				}
+			}
+
+		}
+
+		for (int i = 0; i < oldSize; ++i)
+		{
+			delete oldArr[i];
+		}
+		delete oldArr;
+	}
+
+public:
+	hashMap(int defaultSize = 7){
+		currSize = 0;
+		totalSize = defaultSize;
+		arr = new node<T>* [totalSize];
+		for (int i = 0; i < totalSize; ++i)
+		{
+			arr[i] = NULL;
+		}
+	}
+
+	void insert(string k,T value){
+		int idx = hashFunction(k);
+		node<T>* newNode = new node<T>(k,value);
+		newNode->next = arr[idx];
+		arr[idx] = newNode;
+		currSize++;
+		float loadFactor = (float)currSize/totalSize;
+		if(loadFactor>0.7){
+			reHash();
+		}
+	}
+	T* search(string k){
+		int idx = hashFunction(k);
+		node<T>* temp = arr[idx];
+		while(temp!=NULL){
+			if(temp->key==k){
+				return &(temp->value);
+			}
+			temp = temp->next;
+		}
 		return NULL;
 	}
-	node* root = new node(d);
-	root->left = buildTree();
-	root->right = buildTree();
 
-	return root;
-}
-
-void printTree(node* root){
-	if(root == NULL) return;
-	cout<<root->data<<" ";
-	printTree(root->left);
-	printTree(root->right);
-}
-
-void inorder(node* root){
-	if(root == NULL) return;
-	inorder(root->left);
-	cout<<root->data<<" ";
-	inorder(root->right);
-
-}
-
-void postorder(node* root){
-	if(root == NULL) return;
-	postorder(root->left);
-	postorder(root->right);
-	cout<<root->data<<" ";
-}
-
-int countNodes(node* root){
-	if(root == NULL) return 0;
-	int count  = 1 + countNodes(root->left) + countNodes(root->right);
-	return count;
-}
-
-int sumAllNodes(node* root){
-	if(root == NULL) return 0;
-	int sum = root->data + sumAllNodes(root->left) + sumAllNodes(root->right);
-
-	return sum;
-}
-
-void printKthLevel(node* root,int k){
-	if(k == 0){
-		cout<<root->data<<" ";
-		return;
-	}
-	if(root->left)printKthLevel(root->left,k-1);
-	if(root->right)printKthLevel(root->right,k-1);
-}
-
-int height(node* root){
-	if(root == NULL) return -1;
-
-	int h = 1 + max(height(root->left),height(root->right));
-	return h;
-}
-
-
-void printAllLevels(node* root){
-	int h  = height(root);
-
-	for (int i = 0; i <= h; ++i)
+	T& operator [](string k)
 	{
-		printKthLevel(root,i);
-		cout<<endl;
+		T* valueAdd=NULL;
+		if(search(k)!=NULL) 
+		{
+			valueAdd=search(k);
+		}
+		else
+		{
+			T garbageValue;
+
+			insert(k,garbageValue);
+			valueAdd=search(k);
+		}
+		return *valueAdd;
+
 	}
-
-}
-
+};
 
 int main(int argc, char const *argv[])
 {
-	node* root = buildTree();
-	printTree(root);
-	cout<<endl;
-	// cout<<countNodes(root)<<endl;
-	// cout<<sumAllNodes(root)<<endl;
-	// inorder(root);
-	// cout<<endl;
-	// postorder(root);
-	// cout<<endl;
-	// printKthLevel(root,3);
-	// cout<<endl;
-	cout<<height(root)<<endl;
-	printAllLevels(root);
+	hashMap<int>m(9) ;
+	m.insert("ABC",10);
+	m.insert("DEF",100);
+	m.insert("GHI",1000);
+	// m["GFD"] = 2000;
+	cout<<m["GFD"]<<endl;
 	return 0;
 }

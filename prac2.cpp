@@ -27,25 +27,6 @@ node* buildTree(){
     return root;
 }
 
-void printTree(node* root){
-    if(root == NULL) return;
-    cout<<root->data<<" ";
-    printTree(root->left);
-    printTree(root->right);
-}
-
-int countNodes(node* root){
-    if(root == NULL) return 0;
-    int count  = 1 + countNodes(root->left) + countNodes(root->right);
-    return count;
-}
-
-int height(node* root){
-    if(root == NULL) return -1;
-    if(root->left == NULL and root->right == NULL) return 0;
-    int h = 1 + max(height(root->left),height(root->right));
-    return h;
-}
 
 void bfs(node* root){
     if(root == NULL) return;
@@ -71,54 +52,31 @@ void bfs(node* root){
     cout<<endl;
 }
 
-int diameter(node* root)
-{
-    if(root==NULL)
-    {
-        return 0;
-    }
-    int owndiameter=height(root->left)+height(root->right)+2;
-    int leftdiameter=diameter(root->left);
-    int rightdiameter=diameter(root->right);
-    return max(owndiameter,max(leftdiameter,rightdiameter));
-}
+node* lca(node* root,int A,int B){
+    if(root == NULL) return NULL;
 
-class Pair
-{
-public:
-    int height;
-    int diameter;    
-};
+    if(root->data == A || root->data == B){
+        return root;
+    }
 
-Pair diameterOpt(node* root){
-    Pair P;
-    if(root == NULL){
-        P.height = -1;
-        P.diameter = 0;
-        return P;
+    node* leftAns = lca(root->left,A,B);
+    node* rightAns = lca(root->right,A,B);
+    if(leftAns != NULL && rightAns != NULL){
+        return root;
+    }else if (leftAns != NULL){
+        return leftAns;
     }
-    if(root->left == NULL && root->right == NULL){
-        P.height = 0;
-        P.diameter = 0;
-        return P;
-    }
-    Pair Left = diameterOpt(root->left);
-    Pair Right = diameterOpt(root->right);
-    P.height = max(Left.height,Right.height)+1;
-    int owndiameter = Left.height + Right.height +2;
-    P.diameter = max(Left.diameter,max(Right.diameter,owndiameter));
-    return P;
+    return rightAns;
 }
 
 
 int main(int argc, char const *argv[])
 {
     node* root = buildTree();
-    printTree(root);
-    cout<<endl;
-    // bfs(root);
-    // cout<<diameter(root)<<endl;
-    // Pair ans  = diameterOpt(root);
-    // cout<<ans.diameter<<endl;
+    bfs(root);
+    node* ans = lca(root,7,4);
+    if(ans != NULL){
+        cout<<ans->data<<endl;
+    }
     return 0;
 }
