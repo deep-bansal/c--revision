@@ -1,77 +1,45 @@
 #include <bits/stdc++.h>
 using namespace std;
-class node
-{
-public:
-    int data;
-    node* left;
-    node* right;
-    node(int d){
-        data = d;
-        left = NULL;
-        right = NULL;
-    }
-};
 
-node* buildTree(){
-  int d;
-  cin>>d;
-  int child;
-  cin>>child;
-  node* root = new node(d);
-  if(child == 2){
-    root->left = buildTree();
-    root->right = buildTree();
-  }else if(child == 1){
-    root->left = buildTree();
-    root->right = NULL;
-  }else{
-    root->left = NULL;
-    root->right = NULL;
+void longestConsSeq(int* arr, int n) {
+
+  unordered_map<int, int>mp;
+
+  for (int i = 0; i < n; ++i)
+  {
+    int no = arr[i];
+    if (!mp.count(no - 1) and !mp.count(no + 1)) {
+      mp[no] = 1;
+    } else if (mp.count(no - 1) && mp.count(no + 1)) {
+      int len1  = mp[no - 1];
+      int len2 = mp[no + 1];
+      int streak_len = len1 + 1 + len2;
+
+      mp[no - len1] = streak_len;
+      mp[no + len2] = streak_len;
+    }
+    else if (!mp.count(no - 1) && mp.count(no + 1)) {
+      int len = mp[no + 1];
+      mp[no] = 1 + len;
+      mp[no + len] = 1 + len;
+    } else {
+      int len = mp[no - 1];
+      mp[no] = 1 + len;
+      mp[no - len] = 1 + len;
+    }
   }
-  return root;
-}
+  int ans = 0;
+  for(auto m:mp){
+    ans = max(ans,m.second);
+  }
+  cout<<ans<<endl;
 
-int bfs(node* root,int k) {
-    queue<node*> q;
-    q.push(root);
-    q.push(NULL);
-    int sum  = 0;
-    k--;
-    while (q.size() > 1) {
-
-        node* front = q.front();
-        if (front == NULL) {
-            q.push(NULL);
-            k--;
-        }
-        else {
-            if (front->left) {
-                q.push(front->left);
-            }
-            if (front->right) {
-                q.push(front->right);
-            }
-        }
-        if(k < 0){
-          q.pop();          
-          while(q.front() !=NULL){
-            sum+=q.front()->data;
-            q.pop();
-          }
-          break;
-        }
-        q.pop();
-    }
-    return sum;
 }
 
 int main(int argc, char const *argv[])
 {
-    node* root = buildTree();
-    int k;
-    cin>>k;
-    cout<<bfs(root,k)<<endl;
-   
-    return 0;
+  int arr[] = {8,6,1,2,1,9,3,4,2,6};
+  int n = sizeof(arr) / sizeof(n);
+  longestConsSeq(arr, n);
+  return 0;
 }
