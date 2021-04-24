@@ -1,143 +1,206 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void sumZero(int arr[], int n) {
-    unordered_map<int, int>mp;
-    for (int i = 0; i < n; ++i)
-    {
-        mp[arr[i]] == i;
+class node
+{
+public:
+    int data;
+    node* left;
+    node* right;
+    node(int d){
+        data = d;
+        left = NULL;
+        right = NULL;
+    }
+    
+};
+
+node* insert(node* root,int d){
+    if(root == NULL){
+        root = new node(d);
+        return root;
     }
 
-    for (int i = 0; i < n; ++i)
-    {
-        if (mp.count(0 - arr[i])) {
-            cout << arr[i] << " + " << 0 - arr[i] << " = 0" << endl;
-            break;
-        }
-
+    if(d <= root->data){
+        root->left = insert(root->left,d);
+    }else{
+        root->right = insert(root->right,d);
     }
-    for (auto it : mp) {
-        cout << it.first << " " << it.second << endl;
-    }
+    return root;
 }
 
-void subarraySumZero(int*arr, int n) {
-    unordered_map<int, int>mp;
-    int prefixSum = 0;
-    for (int i = 0; i < n; ++i)
-    {
-        prefixSum += arr[i];
-        if (prefixSum == 0) {
-            cout << 0 << " " << i << endl;
-        } else if (mp.count(prefixSum) && mp[prefixSum] != i) {
-            cout << mp[prefixSum] + 1 << " " << i << endl;
-        }
-        else {
-            mp[prefixSum] = i;
-        }
+node* buildBST(){
+    node* root = NULL;
+    int d;
+    cin>>d;
+    while(d!=-1){
+        root = insert(root,d);
+        cin>>d;
     }
+    return root;
+}
+node* search(node* root,int d){
+    if(root == NULL) return NULL;
+    if(root->data == d) return root;
+    if(d<=root->data){
+        return search(root->left,d);
+    }
+    return search(root->right,d);
+
 }
 
-void longestSumZero(int* arr, int n) {
-    unordered_map<int, int>mp;
-    int prefixSum = 0;
-    int maxLength = 0;
-    int left = -1;
-    int right = -1;
+node* deleteInBST(node* root,int key){
+    if(root == NULL) return NULL;
 
-    for (int i = 0; i < n; ++i)
-    {
-        prefixSum += arr[i];
-        if (arr[i] == 0 && maxLength == 0) {
-            maxLength = 1;
-            left = i;
-            right = i;
-        }
-        if (prefixSum == 0) {
-            if (i + 1 > maxLength) {
-                maxLength = i + 1;
-                left = 0;
-                right = i;
-            }
-        }
-        if (mp.count(prefixSum)) {
-            int currl = i - mp[prefixSum];
-            if (currl > maxLength) {
-                left = mp[prefixSum] + 1;
-                right = i;
-                maxLength = currl;
-            }
-
-        } else {
-            mp[prefixSum] = i;
-        }
+    if(key > root->data){
+        root->right = deleteInBST(root->right,key);
     }
-    cout << maxLength << endl;
-    cout << left << "    to    " << right << endl;
-}
-void targetSumPair(int* arr, int n, int target) {
-    unordered_map<int, int>mp;
-
-    for (int i = 0; i < n; ++i)
-    {
-        if (mp.count(target - arr[i])) {
-            cout << target - arr[i] << " " << arr[i] << endl;
-        } else {
-            mp[arr[i]] = i;
-        }
+    else if(key < root->data){
+        root->left = deleteInBST(root->left,key);
     }
+    else{
+        if(root->right == NULL && root->left == NULL){
+            delete root;
+            return NULL;
+        }
+        else if(root->left != NULL && root->right == NULL){
+            node* temp = root->left;
+            delete root;
+            return temp;
+        }else if(root->left == NULL && root->right != NULL){
+            node* temp = root->right;
+            delete root;
+            return temp;
+        }
+
+        node* temp = root->left;
+        while(temp->right != NULL){
+            temp = temp->right;
+        }
+        root->data = temp->data;
+        root->left = deleteInBST(root->left,root->data);
+    }
+     return root;
 }
 
-void longestSubarrayWithSumTarget(int* arr, int n, int target) {
-    unordered_map<int, int>mp;
-    int prefixSum = 0, maxLength = 0, left = -1, right = -1;
-
-    for (int i = 0; i < n; ++i)
+node* buildtree()
+{
+    int d;
+    cin>>d;
+    if(d==-1)
     {
-        prefixSum += arr[i];
-        if (arr[i] == target && maxLength == 0) {
-            left = i;
-            right = i;
-            maxLength = 1;
-        }
-        if (prefixSum == target) {
-            if (i + 1 > maxLength) {
-                maxLength = i + 1;
-                left = 0;
-                right = i;
-            }
-        }
-        if (mp.count(prefixSum - target)) {
-            int currl = i - mp[prefixSum - target];
-            if (currl > maxLength) {
-                left = mp[prefixSum - target] + 1;
-                right = i;
-                maxLength = currl;
-            } else {
-                mp[prefixSum] = i;
-            }
-        } else {
-            mp[prefixSum] = i;
-        }
+        return NULL;
     }
-    cout << maxLength << endl;
-    cout << left << "    to    " << right << endl;
+    node* root=new node(d);
+    root->left=buildtree();
+    root->right=buildtree();
+
+    return root;
+}
+
+bool isBST(node* root,int minimun,int maximum){
+    if(root == NULL){
+        return true;
+    }
+
+    bool leftBST = isBST(root->left,minimun,root->data);
+    bool rightBST = isBST(root->right,root->data,maximum);
+    bool selfBST = false;
+    if( root->data >= minimun && root->data < maximum) selfBST = true;
+
+    return (leftBST && rightBST && selfBST);
+}
+
+class nodeHelper
+{
+public:
+    bool isBST;
+    int maximum;
+    int minimun;
+    int size;
+    nodeHelper(){
+        isBST = true;
+        maximum = INT_MIN;
+        minimun = INT_MAX;
+        size = 0;
+    }
+    
+};
+
+nodeHelper largestBST(node* root){
+    if(root == NULL) return nodeHelper();
+
+    nodeHelper leftT = largestBST(root->left);
+    nodeHelper rightT = largestBST(root->right);
+
+    nodeHelper curr;
+
+    if(leftT.maximum<= root->data && rightT.minimun > root->data 
+        && leftT.isBST && rightT.isBST){
+        curr.isBST = true;
+        curr.maximum = max(root->data,rightT.maximum);
+        curr.minimun = min(root->data,leftT.minimun);
+        curr.size = leftT.size + rightT.size + 1;
+    }else{
+        curr.isBST = false;
+        curr.size = max(leftT.size,rightT.size);
+    }
+    return curr;
+}
+
+void printBST(node* root){
+    if(root == NULL) return;
+    cout<<root->data<<" ";
+    printBST(root->left);
+    printBST(root->right);
+
+}
+
+node* inorderSuccessor(node* root,int key){
+    node* target = search(root,key);
+    if(target == NULL) return NULL;
+
+    if(target->right != NULL){
+        node* temp = target->right;
+        while(temp->left != NULL){
+            temp = temp->left;
+        }
+        return temp;
+    }else{
+
+        node* ancestor = NULL;
+        node* successor = root;
+        while(successor != target){
+            if(successor->data > target->data){
+                ancestor = successor;
+                successor = successor->left;
+            }else{
+                successor = successor->right;
+            }
+        }
+        return ancestor;
+    }
+
 
 }
 
 int main(int argc, char const *argv[])
 {
-    int arr[] = {2, 1, 2, 0, -1, 2};
-    int n = sizeof(arr) / sizeof(int);
-    int target;
-    cin >> target;
+    node* root = buildBST();
+    // node* root = buildtree();
+    printBST(root);
+    cout<<endl;
+    // if(isBST(root,INT_MIN,INT_MAX)){
+    //     cout<<"Yes it is a BST"<<endl;
+    // }else{
+    //     cout<<"No it is not a BST"<<endl;
+    // }
 
-    // sumZero(arr,n);
+    // nodeHelper ans = largestBST(root);
+    // cout<<ans.size<<endl;
+    cout<<inorderSuccessor(root,9)->data<<endl;
 
-    // subarraySumZero(arr, n);
-    // longestSumZero(arr,n);
-    // targetSumPair(arr,n,target);
-    longestSubarrayWithSumTarget(arr, n, target);
 
+    
     return 0;
 }

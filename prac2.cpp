@@ -1,82 +1,51 @@
 #include <bits/stdc++.h>
 using namespace std;
-class node
-{
-public:
-    int data;
-    node* left;
-    node* right;
-    node(int d){
-        data = d;
-        left = NULL;
-        right = NULL;
-    }
-    
-};
 
-node* buildTree(){
-    int d;
-    cin>>d;
-    if(d == -1){
-        return NULL;
-    }
-    node* root = new node(d);
-    root->left = buildTree();
-    root->right = buildTree();
+string showLen(string str,string pat){
+    unordered_map<char,int>hash_str;
+    unordered_map<char,int>hash_pat;
 
-    return root;
-}
+    for (int i = 0; i < pat.length(); ++i)hash_pat[pat[i]]++;
 
+    if(str.length()< pat.length())return "No String";
 
-void bfs(node* root){
-    if(root == NULL) return;
-    queue<node*>q;
-    q.push(root);
-    q.push(NULL);
-    while(q.size()>1){
-        if(q.front() != NULL){
-            cout<<q.front()->data<<" ";
-            if(q.front()->left){
-            q.push(q.front()->left);
+    int start = 0,end = 0,minLen=INT_MAX,count=0,startidx = -1;
+
+    for (; end < str.length(); ++end)
+    {
+        if(hash_pat.count(str[end])){
+            hash_str[str[end]]++;
+
+            if(hash_str[str[end]] <= hash_pat[str[end]])count++;
         }
-        if(q.front()->right){
-            q.push(q.front()->right);
+        
+
+        if(count == pat.length()){
+            while(!hash_pat.count(str[start]) || hash_str[str[start]]>hash_pat[str[start]]){
+
+                if(hash_str[str[start]]>hash_pat[str[start]]){
+                    hash_str[str[start]]--;
+                }
+                start++;
+            }
+            if(end-start+1<minLen){
+                minLen = end-start+1;
+                startidx = start;
+            }
         }
-
-        }else{
-            cout<<endl;;
-            q.push(NULL);
-        }
-        q.pop();
-    }
-    cout<<endl;
-}
-
-node* lca(node* root,int A,int B){
-    if(root == NULL) return NULL;
-
-    if(root->data == A || root->data == B){
-        return root;
     }
 
-    node* leftAns = lca(root->left,A,B);
-    node* rightAns = lca(root->right,A,B);
-    if(leftAns != NULL && rightAns != NULL){
-        return root;
-    }else if (leftAns != NULL){
-        return leftAns;
-    }
-    return rightAns;
+    if(startidx == -1) return "No String";
+    return str.substr(startidx+1,minLen);
 }
 
 
 int main(int argc, char const *argv[])
 {
-    node* root = buildTree();
-    bfs(root);
-    node* ans = lca(root,7,4);
-    if(ans != NULL){
-        cout<<ans->data<<endl;
-    }
+    string str;
+    string pat;
+    getline(cin,str);
+    getline(cin,pat);
+    cout<<showLen(str,pat)<<endl;
     return 0;
 }

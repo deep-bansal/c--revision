@@ -1,49 +1,51 @@
 #include <bits/stdc++.h>
 using namespace std;
-class Student 
-{
-public:
-    string firstname;
-    string lastname;
-    string rollno;
-    Student(string firstname,string lastname,string rollno){
-        this->firstname = firstname;
-        this->lastname = lastname;
-        this->rollno = rollno;
-    }
 
-    bool operator ==(const Student &s)const{
-        return this->rollno == s.rollno;
-    }
-    
+struct TreeNode {
+  int val;
+  TreeNode *left;
+  TreeNode *right;
+  TreeNode() : val(0), left(nullptr), right(nullptr) {}
+  TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+  TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
-
-class HashFn
-{
+ 
+class Pair{
 public:
-    size_t operator ()(const Student &s)const{
-        return s.firstname.length() + s.lastname.length();
-    }
-    
+    bool leftP;
+    bool rightP;
+    Pair(){
+        leftP = false;
+        rightP = false;
+    }    
 };
-
-int main(int argc, char const *argv[])
-{
-    unordered_map<Student,int,HashFn>mp;
-    Student s1("Deep","Bansal","010");
-    Student s2("Deep","Bansal","020");
-    Student s3("Rah","singh","011");
-
-    mp[s1] = 101;
-    mp[s2] = 123;
-    mp[s3] = 152;
-
-    for(auto it:mp){
-        cout<<it.first.firstname<<" "<<it.first.lastname<<" "<<it.first.rollno<<" "<<it.second<<endl;
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        vector<int>ans;
+        if(root == NULL) return ans;
+        stack<pair<TreeNode*,Pair>>st;
+        Pair p;
+        st.push(make_pair(root,p));
+        while(!st.empty()){
+            pair top = st.top();
+            if((top.first)->left!= NULL && !top.second.leftP){
+                Pair p1;
+                top.second.leftP = true;
+                st.push(make_pair((top.first)->left,p1));
+            }else{
+                if((top.first)->right!=NULL && !top.second.rightP){
+                    Pair p2;
+                    top.second.rightP = true;
+                    st.push(make_pair((top.first)->right,p2));
+                }else{
+                    st.pop();
+                    ans.push_back((top.first)->val);
+                }
+            }
+        }
+        
+        return ans;
+        
     }
-
-
-
-    
-    return 0;
-}
+};
