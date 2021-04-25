@@ -3,10 +3,7 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
-    int a = 339;
-
-    string b = to_string(a);
-    cout<<b<<endl;
+    cout<<"Hello world"<<endl;
 
     return 0;
 }
