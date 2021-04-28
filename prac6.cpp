@@ -42,7 +42,7 @@ node* buildBST(){
 node* search(node* root,int d){
     if(root == NULL) return NULL;
     if(root->data == d) return root;
-    if(d<=root->data){
+    if(d <= root->data){
         return search(root->left,d);
     }
     return search(root->right,d);
@@ -98,84 +98,78 @@ node* buildtree()
     return root;
 }
 
+
+
 void printBST(node* root){
     if(root == NULL) return;
-    cout<<root->data<<" ";
     printBST(root->left);
+    cout<<root->data<<" ";
     printBST(root->right);
 
 }
 
-node* inorderSuccessor(node* root,int key){
-    node* target = search(root,key);
-    if(target == NULL) return NULL;
+void findNodes(node* root,node* &prev,node* &A,node* &B){
+    if(root == NULL) return;
 
-    if(target->right != NULL){
-        node* temp = target->right;
-        while(temp->left != NULL){
-            temp = temp->left;
+    findNodes(root->left,prev,A,B);
+    if(prev != NULL && prev->data > root->data){
+        B = root;
+        if(A == NULL){
+            A = prev;
+        }else{
+            return;
         }
-        return temp;
-    }else{
-
-        node* ancestor = NULL;
-        node* successor = root;
-        while(successor != target){
-            if(successor->data > target->data){
-                ancestor = successor;
-                successor = successor->left;
-            }else{
-                successor = successor->right;
-            }
-        }
-        return ancestor;
     }
+    prev = root;
+    findNodes(root->right,prev,A,B);
 }
-class LinkedList
-{
-public:
-    node* head;
-    node* tail;   
-};
 
-LinkedList bstToLL(node* root){
-    LinkedList ans;
-    if(root == NULL){
-        ans.head = ans.tail = NULL;
+node* constuctBST(int* pre,int* in,int &i,int start,int end){
+    if(start>end)return NULL; 
+
+    int rootVal = pre[i];
+
+    int idx = -1;
+    for (int j = start; j <= end  ; ++j)
+    {
+        if(in[j] == pre[i]){
+            idx = j;
+            break;
+        }        
     }
-    else if(root->left == NULL and root->right == NULL){
-        ans.head = root;
-        ans.tail = root;
+    i = i+1;
+    node* root = new node(rootVal);
+    root->left = constuctBST(pre,in,i,start,idx-1);
+    root->right = constuctBST(pre,in,i,idx+1,end);
+    return root;
+}
+
+node* inorderPred(node* root,int key){
+    if(root == NULL) return NULL;
+    node* target = search(root,key);
+    if(target == NULL){
+        return NULL;
     }
 
-    else if(root->left == NULL and root->right != NULL){
-        LinkedList rightLL = bstToLL(root->right);
-        root->right = rightLL.head;
-        rightLL.head->left = NULL;
-        rightLL.tail->left = NULL;
-        ans.head = root;
-        ans.tail = rightLL.tail;
+    if(target->left){
+        node* temp = target->left;
+        while(temp->right != NULL) temp =temp->right;
+        return temp; 
     }
-    else if(root->left != NULL and root->right == NULL){
-        LinkedList leftLL = bstToLL(root->left);
-        leftLL.tail->right = root;
-        leftLL.head->left = NULL;
-        leftLL.tail->left = NULL;
-        ans.head = leftLL.head;
-        ans.tail = root;
-    }else{
-        LinkedList leftLL = bstToLL(root->left);
-        LinkedList rightLL = bstToLL(root->right);
-        leftLL.tail->right = root;
-        root->right = rightLL.head;
-        rightLL.head->left = NULL;
-        rightLL.tail->left = NULL;
-        leftLL.head->left = NULL;
-        leftLL.tail->left = NULL;
-        ans.head = leftLL.head;
-        ans.tail = rightLL.tail;
-    }
-     return ans;
+
+    node* ancestor = NULL;
+    node* predecessor = root;
+    while(predecessor != target){
+        if(predecessor->data < target->data){
+            ancestor = predecessor;
+            predecessor = predecessor->right;
+        }else{
+            predecessor = predecessor->left;
+        }
+    } 
+    return ancestor;
+
+
 
 }
 
@@ -185,23 +179,16 @@ int main(int argc, char const *argv[])
     // node* root = buildtree();
     printBST(root);
     cout<<endl;
-    // if(isBST(root,INT_MIN,INT_MAX)){
-    //     cout<<"Yes it is a BST"<<endl;
-    // }else{
-    //     cout<<"No it is not a BST"<<endl;
-    // }
+    int x;
+    cin>>x;
+    node* ans = inorderPred(root,x);
+    if(ans){
+        cout<<ans->data<<endl;
+    }
+    else{
+        cout<<"NO found"<<endl;
+    }
 
-    // nodeHelper ans = largestBST(root);
-    // cout<<ans.size<<endl;
-    // cout<<inorderSuccessor(root,9)->data<<endl;
-
-   LinkedList ll = bstToLL(root);
-     node* l = ll.head;
-     while (l) {
-        cout << l->data << ", ";
-        l = l->right;
-     }
-     cout << endl;
     
     return 0;
 }
