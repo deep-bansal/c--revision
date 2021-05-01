@@ -65,13 +65,8 @@ void printTreeFromArr(node* arr[],int &i){
 
 int main(int argc, char const *argv[])
 {
-    node* root = NULL;
-    root = buildtree();
-    node* arr [100];
-    arr[0] = root;
-    treeToARR(root,arr,0);
-    int i =0;
-    printTreeFromArr(arr,i);
+    vector<int> V1[] ={{1,2,3}, {4,5,6}};
+    cout<<V1[0].back()<<endl;
     
     return 0;
 }
