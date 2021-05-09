@@ -65,8 +65,7 @@ void printTreeFromArr(node* arr[],int &i){
 
 int main(int argc, char const *argv[])
 {
-    vector<int> V1[] ={{1,2,3}, {4,5,6}};
-    cout<<V1[0].back()<<endl;
+   cout<<"hello World"<<endl;
     
     return 0;
 }
