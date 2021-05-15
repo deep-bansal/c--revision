@@ -1,48 +1,85 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef pair<int,int> p;
-int findRooms(vector<vector<int> >&v){
 
-	priority_queue<p,vector<p>,greater<p> >startTimeHeap;
-	priority_queue<p,vector<p>,greater<p> >endTimeHeap;
-	int i = 0;
-	while(i < v.size()){
-		startTimeHeap.push(make_pair(v[i][0],v[i][1]));
-		i++;
+class graph
+{
+	map<int,list<int> >l;
+public:
+	void addEdge(int x,int y){
+		l[x].push_back(y);
 	}
 
-	int cnt = 0;
-	if(!startTimeHeap.empty()){
-		cnt++;
-		p meet = startTimeHeap.top();
-		endTimeHeap.push(make_pair(meet.second,meet.first));
-		startTimeHeap.pop();
-	}
+	int shortestDist(int src,int dest){
+        map<int,int>dist;
+        map<int,int>parent;
+        queue<int>q;
+        q.push(src);
+        dist[src] = 0;
+        parent[src] = src;
+        while(!q.empty()){
+            int fNode = q.front();
+            q.pop();
+            for(auto nbr:l[fNode]){
+                if(dist.count(nbr) == 0){
+                    dist[nbr] = dist[fNode] +1;
+                    parent[nbr] = fNode;
+                    q.push(nbr);
+                }
+            }
+        }
 
-	while(!startTimeHeap.empty()){
-		p currMeet = startTimeHeap.top();
-		startTimeHeap.pop();
-		if(currMeet.first > endTimeHeap.top().first){
-			int heapS = endTimeHeap.size();
-			cnt = max(cnt,heapS);
-			endTimeHeap.pop();
-		}
-			endTimeHeap.push(make_pair(currMeet.second,currMeet.first));
-	}
-	int size = endTimeHeap.size();
-	cnt = max(cnt,size);
-	return cnt;
-}
+    //     for (auto d : dist)
+    //     {
+    //         int vertex = d.first;
+    //         cout << vertex << " -> " << d.second<<" ";
+
+    //     }
+    //     cout << endl;
+        int temp = dest;
+        while(temp != src){
+        	cout<<temp<<"-> ";
+        	temp = parent[temp];
+        }
+        cout<<src<<endl;
+
+        return dist[dest];
+    }
+	
+};
 
 int main(int argc, char const *argv[])
 {
-		vector<vector<int> >v = {{0,30},
-								{5, 10},
-								{7,10},
-								{15,20},
-								{20,15}};
-	int roomsReq = findRooms(v);
-	cout<<roomsReq<<endl;
+	int board[50] = {0};
+
+	board[2] = 13;
+	board[5] = 2;
+	board[9] = 18;
+	board[18] = 11;
+	board[17] = -13;
+	board[20] = -14;
+	board[24] = -8;
+	board[25] = 10;
+	board[32] = -2;
+	board[34] = -22;
+
+	graph g;
+	for (int i = 0; i <= 36; ++i)
+	{
+		for (int dice = 1; dice < 7; ++dice)
+		{
+			int j = i + dice;
+			j+= board[j];
+
+			if(j<=36){
+				g.addEdge(i,j);
+			}
+		}
+	}
+	g.addEdge(36,36);
+	cout<<g.shortestDist(0,36);
+
+
+
 	
 	return 0;
 }

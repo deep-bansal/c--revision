@@ -1,86 +1,43 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-
-vector<int>heap;
-
-void upheapify(int idx){
-    if(idx == 0) return;
-    int parent = (idx-1)/2;
-    if(heap[idx] > heap[parent]){
-        swap(heap[idx],heap[parent]);
-        upheapify(parent);
-    }
-    return;
-}
-void downheapify(int idx){
-    int leftChild = (2*idx)+1;
-    int rightChild = (2*idx)+2;
-
-    if(leftChild >= heap.size() && rightChild >= heap.size()) return;
-
-    int largerChild = idx;
-    if(leftChild < heap.size() && heap[leftChild] > heap[largerChild] )
-        largerChild = leftChild;
-
-    if(rightChild < heap.size() && heap[rightChild] > heap[largerChild])
-        largerChild = rightChild;
-
-    if(largerChild == idx)return;
-    swap(heap[idx],heap[largerChild]);
-    downheapify(largerChild);
-}
-
-void push(int d){
-    heap.push_back(d);
-    upheapify(heap.size()-1);
-}
-void popRoot(){
-    swap(heap[0],heap[heap.size()-1]);
-    heap.pop_back();
-    downheapify(0);
-}
-
-void popNode(int idx){
-    heap[idx] = INT_MAX;
-    upheapify(idx);
-    popRoot();
-}
-
-void displayHeap(){
-    for (int i = 0; i < heap.size(); ++i)
-    {
-        cout<<heap[i]<<" ";
-    }
-    cout<<endl;
-}
-
-void buildHeap(){
-    for (int i = 0; i < heap.size(); ++i)
-    {
-        upheapify(i);
-    }
-}
-
-void buildHeapOpt(){
-    for (int i = (heap.size())/2; i >= 0 ; --i)
-    {
-        downheapify(i);
-    }
-}
-
-int main()
+class graph
 {
-    int n = 7;
-    for (int i = 1; i <= n; ++i)
-    {
-        heap.push_back(i*10);
+    int V;
+    list<int>* arr;
+public:
+    graph(int V){
+        this->V = V;
+        arr = new list<int>[V];
     }
-    displayHeap();
-    buildHeapOpt();
-    displayHeap();
 
+    void addEdge(int x,int y,bool bidirectional = true){
+        arr[x].push_back(y);
+        if(bidirectional){
+            arr[y].push_back(x);
+        }
+    }
 
+    void printList(){
+        for(int i=0;i<V;i++){
+            cout<<i<<"-> ";
+            for(int nbr : arr[i]){
+                cout<<nbr<<" ";
+            }
+            cout<<endl;
+        }
+    }
+    
+};
 
+int main(int argc, char const *argv[])
+{
+    graph g(5);
+    g.addEdge(0,2);
+    g.addEdge(3,4);
+    g.addEdge(1,3);
+    g.addEdge(2,4);
+    g.printList();
+    
     return 0;
 }

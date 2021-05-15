@@ -1,57 +1,74 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef pair<int,pair<int,int> > node;
- vector<int> mergeKArrays(vector<vector<int>> arr, int K)
-    {
-        //code here
-        vector<int>res;
-        priority_queue<node,vector<node>,greater<node> >pq;
-        int i = 0;
-        while(i<K){
-            node ele = make_pair(arr[i][0],make_pair(i,0));
-            pq.push(ele);
-            i++;
+
+class graph
+{
+    map<string,list<string > >l;   
+public:
+    void addEdge(string x,string y,bool bidir = true){
+        l[x].push_back(y);
+        if(bidir){
+            l[y].push_back(x);
         }
-        
-        while(!pq.empty()){
-            node topEle = pq.top();
-            pq.pop();
-            int ele = topEle.first;
-            int arrNumber = topEle.second.first;
-            int index = topEle.second.second;
-            res.push_back(ele);
-            if(index+1 < arr[arrNumber].size()){
-            node nextEle = make_pair(arr[arrNumber][index+1],make_pair(arrNumber,index+1));
-            pq.push(nextEle);
+    }
+
+    void printList ()
+    {
+        for (auto pr : l )
+        {
+            string vertex = pr.first;
+            list <string> neighbours = pr.second;
+            cout << vertex << "--> ";
+
+            for (auto nbr : neighbours)
+            {
+                cout << nbr <<" ";
+            }
+            cout << endl;
+        }
+    }
+
+    void shortestDist(string src){
+        map<string,int>dist;
+        queue<string>q;
+        q.push(src);
+        dist[src] = 0;
+        while(!q.empty()){
+            string fNode = q.front();
+            q.pop();
+            for(auto nbr:l[fNode]){
+                if(dist.count(nbr) == 0){
+                    dist[nbr] = dist[fNode] +1;
+                    q.push(nbr);
+                }
             }
         }
-        return res;
+
+        for (auto d : dist)
+        {
+            string vertex = d.first;
+            cout << vertex << " -> " << d.second<<" ";
+
+        }
+        cout << endl;
     }
+
+};
 
 int main(int argc, char const *argv[])
 {
-	int n,k;
-	cin>>k>>n;
+    graph g;
+    g.addEdge("A", "B");
+    g.addEdge("A", "C");
+    g.addEdge("B", "D");
+    g.addEdge("B", "C");
+    g.addEdge("D", "E");
+    g.addEdge("C", "E");
 
-	vector <vector<int> >vec;
+    g.shortestDist("A");
 
-	for(int i=0;i<k;i++)
-	{
-		vector<int> v1;
-		for(int j=0; j<n; j++)
-		{
-			int data;
-			cin>>data;
-			v1.push_back(data);
-		}
-		vec.push_back(v1);
-	}	
-	vector<int>ans = mergeKArrays(vec,k);
-	for (int i = 0; i < ans.size(); ++i)
-	{
-		cout<<ans[i]<<" ";
-	}
+    g.printList();
 
-	
-	return 0;
+    
+    return 0;
 }
