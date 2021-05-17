@@ -1,62 +1,108 @@
 #include <bits/stdc++.h>
 using namespace std;
-class node
+
+// template <typename T>
+class graph
 {
+    unordered_map<string,list<string> >mp;
 public:
-    int data;
-    node* left;
-    node* right;
-    node(int d){
-        data = d;
-        left = NULL;
-        right = NULL;
+    void addEdge(string x,string y){
+        mp[x].push_back(y);
     }
-    
+
+    // void dfs_helper(string src,map<string,bool>&visited,list<string>&ordering){
+    // 	visited[src] = true;
+
+    // 	for(auto nbr: mp[src]){
+    // 		if(!visited[nbr]) dfs_helper(nbr,visited,ordering);
+    // 	}
+
+    // 	ordering.push_front(src);
+    // }
+
+    // void topoSortDFS(){
+    // 	map<string,bool>visited;
+    // 	list<string>ordering;
+
+    // 	for(auto vertex:mp){
+    // 		if(!visited[vertex.first]){
+    // 			dfs_helper(vertex.first,visited,ordering);
+    // 		}
+    // 	}
+
+    // 	for(auto x:ordering){
+    // 		cout<<x<<endl;
+    // 	}
+
+    // }
+
+
+    void topo_sort(){
+    	unordered_map<string,int>inDeg;
+    	list<string>ans;
+    	for(auto v:mp){
+    		inDeg[v.first] = 0;
+    	}
+    	for(auto p : mp){
+    		for(auto v: p.second){
+    			inDeg[v]++;
+    		}
+    	}
+
+    	queue<string>q;
+    	for(auto p : inDeg){
+    		if(inDeg[p.first] == 0) q.push(p.first); 
+    	}
+
+    	while(!q.empty()){
+    		string front  = q.front();
+    		q.pop();
+    		ans.push_back(front);
+    		for(auto nbr:mp[front]){
+    			inDeg[nbr]--;
+    			if(inDeg[nbr] == 0)q.push(nbr);
+    		}
+    	}
+
+    	for(auto x:ans)cout<<x<<endl;
+
+    }
+
+ 
+    // void printList() {
+
+    //     for (auto pr : mp)
+    //     {
+    //         string vertex = pr.first;
+
+    //         cout << vertex << " --> ";
+    //         for (auto nbr : pr.second)
+    //         {
+    //             cout << nbr << ", ";
+    //         }
+
+    //         cout << endl;
+    //     }
+
+    // }
 };
 
-node* constructBST(vector<int>v){
-	stack<node*>st;
-	int i = v.size()-1;
-	node* root = new node(v[i]);
-	i--;
-	st.push(root);
-	while(i>=0){
-		node* top = st.top();
-		if(v[i] > top->data){
-			top->right = new node(v[i]);
-			st.push(top->right);
-		}else{
-			while(!st.empty() && st.top()->data > v[i]){
-				top = st.top();
-				st.pop();
-			}
-			top->left = new node(v[i]);
-			st.push(top->left); 
-		}
-		i--;
-	}
-	return root;
-}
-void printBST(node* root){
-	if(root == nullptr){
-		return;
-	}
-	printBST(root->left);
-	cout<<root->data<<" ";
-	printBST(root->right);
-}
 
 int main(int argc, char const *argv[])
 {
-    vector<int>v;
-    for (int i = 0; i < 6; ++i)
-    {
-    	int d;
-    	cin>>d;
-    	v.push_back(d);
-    }
-    node* root = constructBST(v);
-    printBST(root);
+    graph g;
+	g.addEdge("10", "diploma");
+	g.addEdge("10", "11");
+	g.addEdge("11", "12");
+	g.addEdge("12", "drop");
+	g.addEdge("12", "JEE");
+	g.addEdge("12", "DU");
+	g.addEdge("drop", "JEE");
+	g.addEdge("JEE", "B.Tech");
+	g.addEdge("JEE", "B.E.");
+	g.addEdge("diploma", "B.Tech");
+	g.addEdge("extraordinary", "B.Tech");
 
+	g.topo_sort();
     return 0;
 }

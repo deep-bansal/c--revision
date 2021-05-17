@@ -1,71 +1,89 @@
 #include <bits/stdc++.h>
 using namespace std;
-class node
+// template <typename T>
+class graph
 {
+    int V;
+    unordered_map<int,list<pair<int,int> > >mp;
 public:
-    int data;
-    node* left;
-    node* right;
-    node(int d){
-        data = d;
-        left = NULL;
-        right = NULL;
+    graph(int v){
+        this->V = v;
     }
-    
+    void addEdge(int x,int y,int cost){
+        mp[x].push_back({y,cost});
+        mp[y].push_back({x,cost});
+    }
+
+    // bool dfs_helper(int src,unordered_map<int,bool>&visited,unordered_map<int,bool>&stack){
+    //     visited[src] = true;
+    //     stack[src] = true;
+    //     for(auto nbr :mp[src]){
+    //         if(stack[nbr]) return true;
+    //         else if(!visited[nbr]){
+    //             if(dfs_helper(nbr,visited,stack))return true;
+    //         }
+    //     }
+    //     stack[src] = false;
+    //     return false;
+    // }
+
+    int holi_helpler(int src,unordered_map<int,pair<bool,int> >&visited,int &maxDist){
+        visited[src] = make_pair(true,1);
+
+        for(auto nbr:mp[src]){
+            int nbr_name = nbr.first;
+            int cost = nbr.second;
+            if(!visited[nbr_name].first){
+                visited[src].second += holi_helpler(nbr_name,visited,maxDist);
+                int nodesRight = visited[nbr_name].second;
+                int nodesLeft = V-nodesRight;
+                maxDist = 2*max(nodesRight,nodesLeft)*cost;
+            } 
+        }
+        return visited[src].second;
+
+    }
+
+    void holi(){
+        unordered_map<int,pair<bool,int> >visited;
+        for(int i=0;i<V+1;i++){
+            visited[i] = make_pair(false,0);
+        }
+        int maxDistTravelled = 0;
+        holi_helpler(1,visited,maxDistTravelled);
+        cout<<maxDistTravelled<<endl;
+
+        
+    }
+
+    // void printList() {
+
+    //     for (auto pr : mp)
+    //     {
+    //         int vertex = pr.first;
+
+    //         cout << vertex << " --> ";
+    //         for (auto nbr : pr.second)
+    //         {
+    //             cout << nbr << ", ";
+    //         }
+
+    //         cout << endl;
+    //     }
+
+    // }
 };
-
-node* buildtree()
-{
-    int d;
-    cin>>d;
-    if(d==-1)
-    {
-        return NULL;
-    }
-    node* root=new node(d);
-    root->left=buildtree();
-    root->right=buildtree();
-
-    return root;
-}
-
-void treeToARR(node*root,node* arr[],int i){
-    if(root == NULL ||(root->left == NULL and root->right == NULL)){
-        i--;
-        return;
-    }
-    arr[2*i+1] = root->left;
-    arr[2*i+2] = root->right;
-    i++;
-    treeToARR(root->left,arr,i);
-    i++;
-    treeToARR(root->right,arr,i);
-}
-
-void printTreeFromArr(node* arr[],int &i){
-    if(arr[i] == NULL) return;
-    cout<<"Parent : "<<arr[i]->data<<endl<<"Childs : ";
-    if(arr[2*i+1] == NULL){
-        cout<<"NULL ";
-    }else{
-        cout<<arr[2*i+1]->data<<" ";
-    }
-    if(arr[2*i+2] == NULL){
-        cout<<"NULL "<<endl;
-    }else{
-        cout<<arr[2*i+2]->data<<endl;
-    }
-    i++;
-    printTreeFromArr(arr,i);
-    i++;
-    printTreeFromArr(arr,i);
-
-
-}
 
 int main(int argc, char const *argv[])
 {
-   cout<<"hello World"<<endl;
-    
+    graph g(6);
+    g.addEdge(1, 2, 3);
+    g.addEdge(2, 3, 4);
+    g.addEdge(2, 4, 1);
+    g.addEdge(4, 5, 8);
+    g.addEdge(5, 6, 5);
+    // g.addEdge(2, 4, 1);
+
+    g.holi();
     return 0;
 }

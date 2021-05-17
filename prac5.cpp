@@ -1,36 +1,52 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-priority_queue<int,vector<int>,greater<int> >maxHeap;
-priority_queue<int>minHeap;
+class graph
+{
+    unordered_map<int,list<int> >mp;
+public:
+    void addEdge(int x,int y){
+        mp[x].push_back(y);
+    }
 
-void add(int n){
-    if(!maxHeap.empty() && n > maxHeap.top())maxHeap.push(n);
-    else minHeap.push(n);
-
-    if(fabs(minHeap.size()-maxHeap.size())>1){
-        if(maxHeap.size()>minHeap.size()){
-            minHeap.push(maxHeap.top());
-            maxHeap.pop();
-        }else{
-            maxHeap.push(minHeap.top());
-            minHeap.pop();
+    void dfs_helper(int src,map<int,bool>&visited,int &cnt){
+        visited[src] = true;
+        cnt++;
+        for(auto nbr:mp[src]){
+            if(!visited[nbr]) dfs_helper(nbr,visited,cnt);
         }
     }
-}
 
-float getMedian(){
-    if(maxHeap.size()>minHeap.size()) return maxHeap.top();
-    else if(maxHeap.size()<minHeap.size()) return minHeap.top();
-    else return ((float)maxHeap.top()+minHeap.top())/2;
-}
+    int toMoon(int n){
+        int totalPairs = (n*(n-1))/2;
 
+        map<int,bool>visited;
+
+        for(auto x : mp){
+            int sameCnt = 0;
+            if(!visited[x.first]){
+                dfs_helper(x.first,visited,sameCnt);
+            }
+            int pairsfromSame = (sameCnt*(sameCnt-1))/2;
+            totalPairs -= pairsfromSame;
+        }
+        return totalPairs;
+    }
+    
+};
 
 int main(int argc, char const *argv[])
 {
-    priority_queue<int>pq;
-    pq.push(10);
-    pq.push(10);
-    pq.push(10);
-    cout<<pq.size()<<endl;
+    int n,p;
+    cin>>n>>p;
+    graph g;
+    while(p--){
+        int first,second;
+        cin>>first>>second;
+        g.addEdge(first,second);
+
+    }
+
+    cout<<g.toMoon(n)<<endl;
+    
 }
