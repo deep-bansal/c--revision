@@ -3,83 +3,79 @@ using namespace std;
 
 class graph
 {
-	map<int,list<int> >l;
+	int V;
+	int E;
+	vector<vector<int> >edges;
 public:
-	void addEdge(int x,int y){
-		l[x].push_back(y);
+	graph(int V, int E) {
+		this->V = V;
+		this->E = E;
+		edges.reserve(E);
 	}
 
-	int shortestDist(int src,int dest){
-        map<int,int>dist;
-        map<int,int>parent;
-        queue<int>q;
-        q.push(src);
-        dist[src] = 0;
-        parent[src] = src;
-        while(!q.empty()){
-            int fNode = q.front();
-            q.pop();
-            for(auto nbr:l[fNode]){
-                if(dist.count(nbr) == 0){
-                    dist[nbr] = dist[fNode] +1;
-                    parent[nbr] = fNode;
-                    q.push(nbr);
-                }
-            }
-        }
+	void addEdge(int x, int y, int cost, int edgeNum) {
+		edges[edgeNum] = {x, y, cost};
+	}
 
-    //     for (auto d : dist)
-    //     {
-    //         int vertex = d.first;
-    //         cout << vertex << " -> " << d.second<<" ";
+	void BellmanFord(int src) {
+		vector<int>dist(V);
+		for (int i = 0; i < V; ++i)
+		{
+			dist[i] = INT_MAX;
+		}
+		dist[src] = 0;
 
-    //     }
-    //     cout << endl;
-        int temp = dest;
-        while(temp != src){
-        	cout<<temp<<"-> ";
-        	temp = parent[temp];
-        }
-        cout<<src<<endl;
+		for (int i = 0; i < V - 1; ++i)
+		{
+			for (int j = 0; j < E; j++) {
+				int src = edges[j][0];
+				int dest = edges[j][1];
+				int wt = edges[j][2];
 
-        return dist[dest];
-    }
-	
+				if (dist[src] != INT_MAX and dist[dest] > dist[src] + wt)
+					dist[dest] = dist[src] + wt;
+			}
+
+		}
+
+		for (int j = 0; j < E; ++j)
+		{
+			int src = edges[j][0];
+			int dest = edges[j][1];
+			int wt = edges[j][2];
+
+			if (dist[src] != INT_MAX and dist[dest] > dist[src] + wt)
+				cout << "Negative CYCLE" << endl;
+
+		}
+		for (int i = 0; i < V; ++i)
+		{
+			cout << i << " - " << dist[i] << endl;
+		}
+
+
+	}
+
+
 };
 
 int main(int argc, char const *argv[])
 {
-	int board[50] = {0};
+	int vertices = 7, edges	= 8;
+	graph g(vertices, edges);
 
-	board[2] = 13;
-	board[5] = 2;
-	board[9] = 18;
-	board[18] = 11;
-	board[17] = -13;
-	board[20] = -14;
-	board[24] = -8;
-	board[25] = 10;
-	board[32] = -2;
-	board[34] = -22;
+	g.addEdge(0, 1, 4, 0);
+	g.addEdge(0, 6, 2, 1);
+	g.addEdge(1, 2, 3, 2);
+	g.addEdge(2, 3, 3, 3);
+	g.addEdge(3, 4, -5, 4);
+	g.addEdge(4, 5, 2, 5);
+	g.addEdge(2, 4, 1, 6);
+	g.addEdge(6, 4, 2, 7);
 
-	graph g;
-	for (int i = 0; i <= 36; ++i)
-	{
-		for (int dice = 1; dice < 7; ++dice)
-		{
-			int j = i + dice;
-			j+= board[j];
-
-			if(j<=36){
-				g.addEdge(i,j);
-			}
-		}
-	}
-	g.addEdge(36,36);
-	cout<<g.shortestDist(0,36);
+	g.BellmanFord(0);
 
 
 
-	
 	return 0;
 }

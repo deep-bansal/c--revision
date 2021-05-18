@@ -3,71 +3,81 @@ using namespace std;
 
 class graph
 {
-    map<string,list<string > >l;   
+    // int V;
+    unordered_map<int,list<pair<int,int> > >mp;   
 public:
-    void addEdge(string x,string y,bool bidir = true){
-        l[x].push_back(y);
-        if(bidir){
-            l[y].push_back(x);
-        }
+    void addEdge(int x,int y,int cost){
+        mp[x].push_back({y,cost});
     }
 
-    void printList ()
-    {
-        for (auto pr : l )
-        {
-            string vertex = pr.first;
-            list <string> neighbours = pr.second;
-            cout << vertex << "--> ";
-
-            for (auto nbr : neighbours)
-            {
-                cout << nbr <<" ";
+    void getTopSort(list<int>&ans){
+        unordered_map<int,int>inDeg;
+        for(auto x:mp){
+            inDeg[x.first] = 0;
+        }
+        for(auto x:mp){
+            for(auto y:x.second){
+                inDeg[y.first]++;
             }
-            cout << endl;
+        }
+
+        queue<int>q;
+        for(auto x:mp){
+            if(inDeg[x.first] == 0) q.push(x.first);
+        }
+
+        while(!q.empty()){
+            int frnt = q.front();
+            ans.push_back(frnt);
+            q.pop();
+            for(auto nbr:mp[frnt]){
+                inDeg[nbr.first]--;
+                if(inDeg[nbr.first] == 0)
+                    q.push(nbr.first);
+            }
         }
     }
 
-    void shortestDist(string src){
-        map<string,int>dist;
-        queue<string>q;
-        q.push(src);
+    void shortestPath(int src){
+        list<int>ans;
+        getTopSort(ans);
+        unordered_map<int,int>dist;
+        
+        // for(auto x: ans)cout<<x<<" ";
+        // cout<<endl;
+
+        for(auto y:ans)dist[y] = INT_MAX;
+
         dist[src] = 0;
-        while(!q.empty()){
-            string fNode = q.front();
-            q.pop();
-            for(auto nbr:l[fNode]){
-                if(dist.count(nbr) == 0){
-                    dist[nbr] = dist[fNode] +1;
-                    q.push(nbr);
+
+        for(auto x:ans){
+            for(auto nbr: mp[x]){
+                if(dist[nbr.first] > dist[x] + nbr.second){
+                    dist[nbr.first] = dist[x] + nbr.second;
                 }
             }
+            cout<<endl;
+        }
+        for(auto x:dist){
+            cout<<x.first<<"--->"<<x.second<<endl;
         }
 
-        for (auto d : dist)
-        {
-            string vertex = d.first;
-            cout << vertex << " -> " << d.second<<" ";
 
-        }
-        cout << endl;
-    }
+    }    
 
 };
 
 int main(int argc, char const *argv[])
 {
     graph g;
-    g.addEdge("A", "B");
-    g.addEdge("A", "C");
-    g.addEdge("B", "D");
-    g.addEdge("B", "C");
-    g.addEdge("D", "E");
-    g.addEdge("C", "E");
-
-    g.shortestDist("A");
-
-    g.printList();
+    g.addEdge(0,1,1);
+    g.addEdge(1,2,3);
+    g.addEdge(2,3,4);
+    g.addEdge(1,3,2);
+    // g.addEdge(4,2,2);
+    // g.addEdge(4,5,4);
+    // g.addEdge(5,3,1);
+    g.shortestPath(0);
 
     
     return 0;

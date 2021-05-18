@@ -13,46 +13,6 @@ public:
         }
     }
 
-    // bool undirectedCycleDetectHelper(string src,unordered_map<T,bool> &visited,string parent){
-    //     visited[src] = true;
-    //     for(auto nbr : mp[src]){
-    //         if(!visited[nbr]){
-    //             if(undirectedCycleDetectHelper(nbr,visited,src)) return true;
-    //         }
-    //         else if(nbr != parent) return true;
-    //     }
-    //     return false;
-    // }
-
-    // void undirectedCycleDetect(string src){
-    //     unordered_map<T,bool>visited;
-    //     if(undirectedCycleDetectHelper(src,visited,""))cout<<"Cycle found"<<endl;
-    //     else cout<<"cycle not found"<<endl;
-    // }
-
-    // bool cycleDetectUsingBfs(string src){
-    //     unordered_map<string,bool>visited;
-    //     unordered_map<string,string>parent;
-    //     queue<string>q;
-    //     q.push(src);
-    //     visited[src] = true;
-    //     parent[src] = "";
-    //     while(!q.empty()){
-    //         string front = q.front();
-    //         q.pop();
-    //         for(auto nbr:mp[front]){
-    //             if(!visited[nbr]){
-    //                 visited[nbr] = true;
-    //                 q.push(nbr);
-    //                 parent[nbr] = front;
-    //             }else if(nbr != parent[front]){
-    //                 return true;
-    //             }
-    //         }
-    //     }
-    //     return false;
-    // }
-
     void printList() {
 
         for (auto pr : mp)
