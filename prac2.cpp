@@ -3,81 +3,70 @@ using namespace std;
 
 class graph
 {
-    // int V;
-    unordered_map<int,list<pair<int,int> > >mp;   
+    int V;
+    int E;
+    vector<vector<int> >edges;  
 public:
-    void addEdge(int x,int y,int cost){
-        mp[x].push_back({y,cost});
+    graph(int v,int e){
+        this->V = v;
+        E = e;
+        edges.reserve(e);
     }
 
-    void getTopSort(list<int>&ans){
-        unordered_map<int,int>inDeg;
-        for(auto x:mp){
-            inDeg[x.first] = 0;
-        }
-        for(auto x:mp){
-            for(auto y:x.second){
-                inDeg[y.first]++;
-            }
-        }
-
-        queue<int>q;
-        for(auto x:mp){
-            if(inDeg[x.first] == 0) q.push(x.first);
-        }
-
-        while(!q.empty()){
-            int frnt = q.front();
-            ans.push_back(frnt);
-            q.pop();
-            for(auto nbr:mp[frnt]){
-                inDeg[nbr.first]--;
-                if(inDeg[nbr.first] == 0)
-                    q.push(nbr.first);
-            }
-        }
+    void addEdge(int x,int y,int cost,int edgeNum){
+        edges[edgeNum] = {x,y,cost};
     }
-
-    void shortestPath(int src){
-        list<int>ans;
-        getTopSort(ans);
-        unordered_map<int,int>dist;
-        
-        // for(auto x: ans)cout<<x<<" ";
-        // cout<<endl;
-
-        for(auto y:ans)dist[y] = INT_MAX;
-
+    void bellman_ford(int src){
+        vector<int>dist(V);
+        for (int i = 0; i < V; ++i)
+        {
+            dist[i] = INT_MAX;
+        }
         dist[src] = 0;
-
-        for(auto x:ans){
-            for(auto nbr: mp[x]){
-                if(dist[nbr.first] > dist[x] + nbr.second){
-                    dist[nbr.first] = dist[x] + nbr.second;
+        for(int i=0;i<V-1;i++){
+            for(int j=0;j<E;j++){
+                int src = edges[j][0];
+                int dest = edges[j][1];
+                int cost = edges[j][2];
+                if(dist[dest] > dist[src] + cost){
+                    dist[dest] = dist[src] + cost;
                 }
             }
-            cout<<endl;
         }
-        for(auto x:dist){
-            cout<<x.first<<"--->"<<x.second<<endl;
+        for(int j=0;j<E;j++){
+                int src = edges[j][0];
+                int dest = edges[j][1];
+                int cost = edges[j][2];
+                if(dist[dest] > dist[src] + cost){
+                    cout<<"negative cycle";
+                }
+        }
+
+        for(int i=0;i<V;i++){
+            cout<<i<<"--->"<<dist[i]<<endl;
         }
 
 
-    }    
 
+    }
 };
 
 int main(int argc, char const *argv[])
 {
-    graph g;
-    g.addEdge(0,1,1);
-    g.addEdge(1,2,3);
-    g.addEdge(2,3,4);
-    g.addEdge(1,3,2);
-    // g.addEdge(4,2,2);
-    // g.addEdge(4,5,4);
-    // g.addEdge(5,3,1);
-    g.shortestPath(0);
+    int vertices = 7, edges = 8;
+    graph g(vertices, edges);
+
+    g.addEdge(0, 1, 4, 0);
+    g.addEdge(0, 6, 2, 1);
+    g.addEdge(1, 2, 3, 2);
+    g.addEdge(2, 3, 3, 3);
+    g.addEdge(3, 4, -5, 4);
+    g.addEdge(4, 5, 2, 5);
+    g.addEdge(2, 4, 1, 6);
+    g.addEdge(6, 4, 2, 7);
+
+    g.bellman_ford(0);
+    
 
     
     return 0;

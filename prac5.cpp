@@ -1,52 +1,49 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <string.h>
+ 
 using namespace std;
+ 
 
-class graph
-{
-    unordered_map<int,list<int> >mp;
+class AddString {
+ 
 public:
-    void addEdge(int x,int y){
-        mp[x].push_back(y);
-    }
-
-    void dfs_helper(int src,map<int,bool>&visited,int &cnt){
-        visited[src] = true;
-        cnt++;
-        for(auto nbr:mp[src]){
-            if(!visited[nbr]) dfs_helper(nbr,visited,cnt);
-        }
-    }
-
-    int toMoon(int n){
-        int totalPairs = (n*(n-1))/2;
-
-        map<int,bool>visited;
-
-        for(auto x : mp){
-            int sameCnt = 0;
-            if(!visited[x.first]){
-                dfs_helper(x.first,visited,sameCnt);
-            }
-            int pairsfromSame = (sameCnt*(sameCnt-1))/2;
-            totalPairs -= pairsfromSame;
-        }
-        return totalPairs;
-    }
     
+    char str[100]; 
+    
+    AddString(char str[])
+    {
+        strcpy(this->str, str);
+    }
+
+    AddString operator+(AddString& S2)
+    {
+        
+        AddString S3;
+
+        strcat(this->str, S2.str);
+ 
+        strcpy(S3.str, this->str);
+ 
+        return S3;
+    }
+
+    // AddString operator=(AddString&S1){
+    //     if(this->str == S1) return true;
+    //     else return false;
+    // }
 };
-
-int main(int argc, char const *argv[])
+ 
+int main()
 {
-    int n,p;
-    cin>>n>>p;
-    graph g;
-    while(p--){
-        int first,second;
-        cin>>first>>second;
-        g.addEdge(first,second);
+    char str1[] = "Deep";
+    char str2[] = "bansal";
 
-    }
-
-    cout<<g.toMoon(n)<<endl;
-    
+    AddString a1(str1);
+    AddString a2(str2);
+    AddString a3;
+ 
+    a3 = a1 + a2;
+    cout << "Concatenation: " << a3.str<<endl;
+ 
+    return 0;
 }

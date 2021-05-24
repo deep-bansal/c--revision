@@ -3,76 +3,89 @@ using namespace std;
 
 class graph
 {
-    int V;
-    unordered_map<int,list<pair<int,int> > >mp;
+    unordered_map<string,list<string> >mp;
 public:
-    graph(int v){
-        this->V = v;
+    void addEdge(string x,string y,bool bidirectional =false){
+        mp[x].push_back(y);
+        if(bidirectional)mp[y].push_back(x);
     }
 
-    void addEdge(int x,int y,int cost){
-        mp[x].push_back({y,cost});
+    // void bfsShortestPath(int src){
+    //     unordered_map<int,int>dist;
+    //     queue<int>q;
+    //     q.push(src);
+    //     dist[src] = 0;
+    //     while(!q.empty()){
+    //         int front = q.front();
+    //         q.pop();
+    //         for(auto nbr : mp[front]){
+    //             if(dist.count(nbr) == 0){
+    //                 dist[nbr] = dist[front]+1;
+    //                 q.push(nbr);
+    //             }
+    //         }
+    //     }
+
+    //     for(auto x:dist){
+    //         cout<<x.first<<"--->"<<x.second<<endl;
+    //     }
+
+    // }
+
+    void dfs_helper(string src,unordered_map<string,bool>&visited,list<string>&ans){
+        visited[src] = true;
+
+        for(auto nbr:mp[src]){
+            if(!visited[nbr]){
+              dfs_helper(nbr,visited,ans);
+            }
+
+        }
+        ans.push_front(src);
+
     }
 
-    void shortestPath(int src){
-        unordered_map<int,int>inDeg;
-        for(auto x:mp){
-            inDeg[x.first] = 0;
-        }
-        for(auto x:mp){
-            for(auto y: x.second)inDeg[y.first]++;
-        }
+    void dfs(){
+        unordered_map<string,bool>visited;
 
-        list<int>ans;
-        queue<int>q;
-        for(auto z:mp){
-            if(inDeg[z.first] == 0)q.push(z.first);
-        }
-
-        while(!q.empty()){
-            int frnt  = q.front();
-            ans.push_back(frnt);
-            q.pop();
-            for(auto nbr : mp[frnt]){
-                inDeg[nbr.first]--;
-                if(inDeg[nbr.first] == 0) q.push(nbr.first);
+        list<string>ans;
+        for(auto x:mp){
+            if(!visited[x.first]){
+                dfs_helper(x.first,visited,ans);
             }
         }
         for(auto x:ans){
             cout<<x<<" ";
         }
         cout<<endl;
-
-        unordered_map<int,int>dist;
-        for(auto x:ans) dist[x] = INT_MAX;
-        dist[src] = 0;
-        for(auto x:ans){
-            if(dist[x] != INT_MAX){
-                for(auto i:mp[x]){
-                    if(dist[i.first] > dist[x] + i.second){
-                        dist[i.first] = dist[x] + i.second;
-                    }
-                }
+    }
+    void printList(){
+        for(auto v: mp){
+            cout<<v.first<<"--->";
+            for(auto x:v.second){
+                cout<<x<<" ";
             }
+            cout<<endl;
         }
-
-        for(auto x:dist){
-            cout<<x.first<<"--->"<<x.second<<endl;
-        }
-
     }
 };
 
 int main(int argc, char const *argv[])
 {
-    graph g(5);
-    g.addEdge(0,1,2);
-    g.addEdge(0,4,1);
-    g.addEdge(1,2,3);
-    g.addEdge(2,3,6);
-    g.addEdge(4,2,2);
-    g.addEdge(4,5,4);
-    g.addEdge(5,3,1);
-    g.shortestPath(0);
+    graph g;
+    g.addEdge("10", "diploma");
+    g.addEdge("10", "11");
+    g.addEdge("11", "12");
+    g.addEdge("12", "drop");
+    g.addEdge("12", "JEE");
+    g.addEdge("12", "DU");
+    g.addEdge("drop", "JEE");
+    g.addEdge("JEE", "B.Tech");
+    g.addEdge("JEE", "B.E.");
+    g.addEdge("diploma", "B.Tech");
+    g.addEdge("extraordinary", "B.Tech");
+    g.printList();
+    g.dfs();
+    
     return 0;
 }
